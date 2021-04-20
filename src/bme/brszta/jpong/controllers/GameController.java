@@ -1,6 +1,8 @@
 package bme.brszta.jpong.controllers;
 
+import bme.brszta.jpong.gameobjects.Ball;
 import bme.brszta.jpong.gameobjects.Pad;
+import bme.brszta.jpong.gameobjects.Player;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -13,12 +15,12 @@ public class GameController {
     @FXML
     private Canvas canvas;
     private long prevTime;
-    private Pad player1;
+    private Player player;
+    private Pad other;
+    private Ball ball;
     private GraphicsContext context;
 
     public GameController() {
-
-        player1 = new Pad();
         prevTime = System.nanoTime();
 
         animationTimer = new AnimationTimer() {
@@ -34,6 +36,10 @@ public class GameController {
         context = canvas.getGraphicsContext2D();
         // To handle keyboard input
         canvas.setFocusTraversable(true);
+
+        player = new Player(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        other = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        ball = new Ball((int) canvas.getWidth() / 2 - Ball.SIZE / 2, (int) canvas.getHeight() / 2 - Ball.SIZE / 2);
         animationTimer.start();
     }
 
@@ -41,7 +47,9 @@ public class GameController {
         long deltaT = (l - prevTime) / 1000_000;    // Convert to ms
         prevTime = l;
 
-        player1.update(deltaT);
+        player.update(deltaT);
+        other.update(deltaT);
+        ball.update(deltaT, player.getBoundingBox(), other.getBoundingBox());
 
         drawer();
     }
@@ -50,11 +58,13 @@ public class GameController {
         context.setFill(Color.BLACK);
         context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        player1.draw(context);
+        player.draw(context);
+        other.draw(context);
+        ball.draw(context);
     }
 
     @FXML
     void keyEventHandler(KeyEvent event) {
-        player1.keyHandler(event);
+        player.keyHandler(event);
     }
 }

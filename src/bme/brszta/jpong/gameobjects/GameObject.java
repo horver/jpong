@@ -1,16 +1,22 @@
 package bme.brszta.jpong.gameobjects;
 
 import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.GraphicsContext;
 
-public class GameObject {
-    public Point2D getPosition() {
-        return position;
+abstract class GameObject {
+    protected Point2D position;
+
+    public GameObject(int x, int y) {
+        this.position = new Point2D(x, y);
     }
 
-    public void setPosition(Point2D position) {
-        this.position = position;
+    public void update(long deltaT) {
+        // TODO: Add Sockets
     }
 
-    private Point2D position;
+    public abstract Rectangle2D getBoundingBox();
+
+    public abstract void draw(GraphicsContext context);
 
 }
