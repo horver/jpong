@@ -12,4 +12,5 @@ public class GameObject {
     }
 
     private Point2D position;
+
 }
