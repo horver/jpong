@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="480.0" prefWidth="640.0" spacing="50.0" styleClass="menu-container" stylesheets="@game.css"
+      xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="bme.brszta.jpong.controllers.MainMenuController">
+   <Button mnemonicParsing="false" onAction="#actionNewGame" styleClass="button-menu" stylesheets="@game.css"
+           text="New game"/>
+   <Button mnemonicParsing="false" styleClass="button-menu" text="Options"/>
+   <Button mnemonicParsing="false" onAction="#actionExit" styleClass="button-menu" text="Exit"/>
+</VBox>
