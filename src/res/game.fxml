@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
@@ -15,4 +17,13 @@
          <Font size="20.0"/>
       </font>
    </Text>
+   <Text fx:id="nameField" fill="WHITE" layoutX="268.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0"
+         text="Player1 - PLayer2" textAlignment="CENTER"/>
+   <VBox fx:id="menuPause" alignment="CENTER" layoutX="220.0" layoutY="120.0" prefHeight="200.0" prefWidth="100.0"
+         stylesheets="@game.css" visible="false">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PAUSED"/>
+      <Button mnemonicParsing="false" onAction="#actionResume" text="Resume"/>
+      <Button mnemonicParsing="false" text="Save"/>
+      <Button mnemonicParsing="false" onAction="#actionExit" text="Exit"/>
+   </VBox>
 </Pane>

@@ -11,11 +11,22 @@ public class Ball extends GameObject {
     public static final int SIZE = 16;
     public static final double SPEED = 0.7;
 
-    private Point2D velocity = new Point2D(-1 + Math.random() * 2, -1 + Math.random() * 2).normalize();
+    private Point2D velocity;
     private OnScoreListener listener;
 
     public Ball(int x, int y) {
         super(x, y);
+        randomDirection();
+    }
+
+    private void randomDirection() {
+        velocity = new Point2D(-1 + Math.random() * 2, -1 + Math.random() * 2).normalize();
+    }
+
+    @Override
+    public void restart() {
+        randomDirection();
+        super.restart();
     }
 
     @Override
