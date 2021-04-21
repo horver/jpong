@@ -11,10 +11,10 @@ import java.util.List;
 
 public class Ball extends GameObject {
     public static final int SIZE = 16;
-    public static final double SPEED = 0.7;
+    public static final double SPEED = 0.4;
 
     private Point2D velocity;
-    private List<OnScoreListener> listeners = new ArrayList<>();
+    private final List<OnScoreListener> listeners = new ArrayList<>();
 
     public Ball(int x, int y) {
         super(x, y);
@@ -23,6 +23,17 @@ public class Ball extends GameObject {
 
     private void randomDirection() {
         velocity = new Point2D(-1 + Math.random() * 2, -1 + Math.random() * 2).normalize();
+
+        // Handling edge cases: zero velocity, or only mostly one directional velocity
+        if (velocity == Point2D.ZERO ||
+                velocity.angle(0, 1) < 15 ||
+                velocity.angle(0, -1) < 15 ||
+                velocity.angle(1, 0) < 15 ||
+                velocity.angle(-1, 0) < 15
+        ) {
+            velocity = new Point2D(0.5, 0.5).normalize();
+        }
+
     }
 
     @Override
@@ -57,7 +68,6 @@ public class Ball extends GameObject {
         }
 
         position = position.add(velocity.multiply(deltaT * SPEED).normalize());
-
         super.update(deltaT);
     }
 
