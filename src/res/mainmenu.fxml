@@ -8,6 +8,5 @@
       fx:controller="bme.brszta.jpong.controllers.MainMenuController">
    <Button mnemonicParsing="false" onAction="#actionNewGame" styleClass="button-menu" stylesheets="@game.css"
            text="New game"/>
-   <Button mnemonicParsing="false" styleClass="button-menu" text="Options"/>
    <Button mnemonicParsing="false" onAction="#actionExit" styleClass="button-menu" text="Exit"/>
 </VBox>

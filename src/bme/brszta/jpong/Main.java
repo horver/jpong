@@ -12,6 +12,7 @@ import java.net.URL;
 public class Main extends Application {
 
     private static Stage stage;
+    public static final PropertyStorage propertyStorage = new PropertyStorage();
 
     @Override
     public void start(Stage primaryStage) {

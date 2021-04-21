@@ -2,9 +2,17 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
       prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="bme.brszta.jpong.controllers.GameController">
    <Canvas fx:id="canvas" height="480.0" onKeyPressed="#keyEventHandler" onKeyReleased="#keyEventHandler"
            width="640.0"/>
+   <Text fx:id="scoreField" fill="WHITE" layoutX="191.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0"
+         text="0 : 0" textAlignment="CENTER" wrappingWidth="257.13000106811523">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Text>
 </Pane>

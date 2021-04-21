@@ -1,5 +1,13 @@
-.button-menu {
-    -fx-border-color: yellow;
+.menu-container {
+    -fx-background-color: black;
+}
+
+Label, RadioButton {
+    -fx-text-fill: white;
+}
+
+Button {
+    -fx-border-color: white;
     -fx-border-width: 5;
     -fx-background-color: black;
     -fx-fill-width: true;
@@ -10,10 +18,16 @@
     -fx-cursor: hand;
 }
 
-.button-menu:hover {
+Button:hover {
     -fx-font-size: 150%;
 }
 
-.menu-container {
+TextField {
+    -fx-border-color: white;
+    -fx-border-width: 5;
     -fx-background-color: black;
+    -fx-fill-width: true;
+    -fx-text-fill: white;
+    -fx-font-family: Dialog;
+    -fx-cursor: hand;
 }

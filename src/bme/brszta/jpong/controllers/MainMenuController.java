@@ -8,7 +8,7 @@ public class MainMenuController {
 
     @FXML
     void actionNewGame(ActionEvent event) {
-        Main.switchScene("game.fxml");
+        Main.switchScene("modeselector.fxml");
     }
 
     @FXML
