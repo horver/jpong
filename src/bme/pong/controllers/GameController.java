@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,19 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameController implements OnScoreListener, OnStatisticsListener {
-    private AnimationTimer animationTimer;
 
     @FXML
     private Canvas canvas;
-
-    private long prevTime;
-    private Player player;
-    private Pad other;
-    private Ball ball;
-    private GraphicsContext context;
-    private final List<GameObject> gameObjects = new ArrayList<>();
-    private boolean isPaused = false;
-    private final ScoreManager scoreManager = new ScoreManager();
 
     @FXML
     private Text scoreField;
@@ -45,6 +34,17 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     @FXML
     private VBox menuPause;
+
+    private AnimationTimer animationTimer;
+    private long prevTime;
+    private Player player;
+    private Pad other;
+    private Ball ball;
+    private GraphicsContext context;
+    private final List<GameObject> gameObjects = new ArrayList<>();
+    private boolean isPaused = false;
+    private boolean isStarted = false;
+    private final ScoreManager scoreManager = new ScoreManager();
 
     public GameController() {
         prevTime = System.nanoTime();
@@ -82,7 +82,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         long deltaT = (l - prevTime) / 1000_000;    // Convert to ms
         prevTime = l;
 
-        if (!isPaused) {
+        if (!isPaused && isStarted) {
             player.update(deltaT);
             other.update(deltaT);
             ball.update(deltaT, player.getBoundingBox(), other.getBoundingBox());
@@ -98,14 +98,26 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         gameObjects.forEach(gameObject -> gameObject.draw(context));
     }
 
+    private void resetGame() {
+        gameObjects.forEach(GameObject::restart);
+    }
+
     @FXML
     void keyEventHandler(KeyEvent event) {
         player.keyHandler(event);
 
         if (event.getEventType() == KeyEvent.KEY_RELEASED) {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                isPaused = !isPaused;
-                menuPause.setVisible(isPaused);
+            switch (event.getCode()) {
+                case ESCAPE:
+                    isPaused = !isPaused;
+                    menuPause.setVisible(isPaused);
+                    break;
+                case SPACE:
+                    isStarted = true;
+                    break;
+                case F7:
+                    scoreManager.saveState();
+                    break;
             }
         }
     }
@@ -132,6 +144,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 new Alert(Alert.AlertType.ERROR, "Failed to load!").show();
             }
             resetGame();
+            isStarted = false;
         }
     }
 
@@ -147,10 +160,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     @Override
     public void onScore(ScoringSide side) {
         resetGame();
-    }
-
-    private void resetGame() {
-        gameObjects.forEach(GameObject::restart);
+        isStarted = false;
     }
 
     @Override
