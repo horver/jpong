@@ -128,7 +128,10 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Game state", "*.state"));
         File file = Main.showOpenFileDialog(fileChooser);
         if (file != null && file.exists()) {
-            scoreManager.loadState(file);
+            if (!scoreManager.loadState(file)) {
+                new Alert(Alert.AlertType.ERROR, "Failed to load!").show();
+            }
+            resetGame();
         }
     }
 
@@ -143,6 +146,10 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     @Override
     public void onScore(ScoringSide side) {
+        resetGame();
+    }
+
+    private void resetGame() {
         gameObjects.forEach(GameObject::restart);
     }
 

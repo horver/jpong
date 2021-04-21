@@ -51,9 +51,9 @@ public class ScoreManager implements OnScoreListener {
         return true;
     }
 
-    public void loadState(File file) {
+    public boolean loadState(File file) {
         if (file == null) {
-            return;
+            return false;
         }
 
         try (Scanner scanner = new Scanner(file)) {
@@ -65,7 +65,10 @@ public class ScoreManager implements OnScoreListener {
             scoreChanged();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
+
+        return true;
     }
 
     @Override
