@@ -67,26 +67,11 @@ public class PropertyStorage {
     public void load() {
         File config = new File(configPath);
         if (config.exists()) {
-            int currentLine = 0;
             try (Scanner scanner = new Scanner(new FileInputStream(config))) {
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    switch (currentLine) {
-                        case 0:
-                            playerName = line;
-                            break;
-                        case 1:
-                            hostAddress = line;
-                            break;
-                        case 2:
-                            hostPort = Integer.parseInt(line);
-                            break;
-                        case 3:
-                            isClient = Boolean.parseBoolean(line);
-                            break;
-                    }
-                    currentLine++;
-                }
+                playerName = scanner.nextLine();
+                hostAddress = scanner.nextLine();
+                hostPort = Integer.parseInt(scanner.nextLine());
+                isClient = Boolean.parseBoolean(scanner.nextLine());
             } catch (FileNotFoundException e) {
                 loadDefaults();
             }
