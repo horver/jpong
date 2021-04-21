@@ -1,4 +1,9 @@
-package bme.brszta.jpong;
+package bme.pong.storages;
+
+import bme.pong.Main;
+import bme.pong.entities.ScoringSide;
+import bme.pong.listeners.OnScoreListener;
+import bme.pong.listeners.OnStatisticsListener;
 
 import java.io.File;
 import java.io.FileNotFoundException;

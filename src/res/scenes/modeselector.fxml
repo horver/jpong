@@ -4,8 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
-          prefWidth="640.0" styleClass="menu-container" stylesheets="@game.css" xmlns:fx="http://javafx.com/fxml/1"
-          xmlns="http://javafx.com/javafx/16" fx:controller="bme.brszta.jpong.controllers.ModeSelectorController">
+          prefWidth="640.0" styleClass="menu-container" stylesheets="@../styles/game.css"
+          xmlns:fx="http://javafx.com/fxml/1"
+          xmlns="http://javafx.com/javafx/16" fx:controller="bme.pong.controllers.ModeSelectorController">
     <columnConstraints>
         <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="80.0" minWidth="5.0" prefWidth="1.0"/>
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="40.0"/>

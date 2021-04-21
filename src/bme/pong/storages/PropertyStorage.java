@@ -1,4 +1,4 @@
-package bme.brszta.jpong;
+package bme.pong.storages;
 
 import java.io.*;
 import java.util.Scanner;

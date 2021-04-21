@@ -1,4 +1,4 @@
-package bme.brszta.jpong.gameobjects;
+package bme.pong.entities;
 
 enum MoveAction {
     IDLE,

@@ -1,4 +1,4 @@
-package bme.brszta.jpong.gameobjects;
+package bme.pong.entities;
 
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;

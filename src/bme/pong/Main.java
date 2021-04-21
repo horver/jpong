@@ -1,5 +1,6 @@
-package bme.brszta.jpong;
+package bme.pong;
 
+import bme.pong.storages.PropertyStorage;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +21,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         stage = primaryStage;
         switchScene("mainmenu.fxml");
-        primaryStage.setTitle("JPong");
+        primaryStage.setTitle("PONG");
         primaryStage.show();
     }
 
@@ -31,7 +32,7 @@ public class Main extends Application {
     public static void switchScene(String fxml) {
         Parent root;
         try {
-            URL resource = Main.class.getResource("/res/" + fxml);
+            URL resource = Main.class.getResource("/res/scenes/" + fxml);
             if (resource == null) {
                 throw new RuntimeException("Resource not found.");
             }

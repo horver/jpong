@@ -1,10 +1,10 @@
-package bme.brszta.jpong.controllers;
+package bme.pong.controllers;
 
-import bme.brszta.jpong.*;
-import bme.brszta.jpong.gameobjects.Ball;
-import bme.brszta.jpong.gameobjects.GameObject;
-import bme.brszta.jpong.gameobjects.Pad;
-import bme.brszta.jpong.gameobjects.Player;
+import bme.pong.Main;
+import bme.pong.entities.*;
+import bme.pong.listeners.OnScoreListener;
+import bme.pong.listeners.OnStatisticsListener;
+import bme.pong.storages.ScoreManager;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

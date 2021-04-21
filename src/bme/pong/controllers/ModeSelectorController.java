@@ -1,6 +1,6 @@
-package bme.brszta.jpong.controllers;
+package bme.pong.controllers;
 
-import bme.brszta.jpong.Main;
+import bme.pong.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

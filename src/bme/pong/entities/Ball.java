@@ -1,7 +1,6 @@
-package bme.brszta.jpong.gameobjects;
+package bme.pong.entities;
 
-import bme.brszta.jpong.OnScoreListener;
-import bme.brszta.jpong.ScoringSide;
+import bme.pong.listeners.OnScoreListener;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;

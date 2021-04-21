@@ -1,11 +1,11 @@
-package bme.brszta.jpong.gameobjects;
+package bme.pong.entities;
 
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyEvent;
 
 public class Player extends Pad {
 
-    public static final double SPEED = 2;
+    public static final double SPEED = 0.7;
     private MoveAction moveAction = MoveAction.IDLE;
 
     public Player(int x, int y) {

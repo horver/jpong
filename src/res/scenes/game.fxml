@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Text?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
       prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="bme.brszta.jpong.controllers.GameController">
+      fx:controller="bme.pong.controllers.GameController">
    <Canvas fx:id="canvas" height="480.0" onKeyPressed="#keyEventHandler" onKeyReleased="#keyEventHandler"
            width="640.0"/>
    <Text fx:id="scoreField" fill="WHITE" layoutX="191.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0"
@@ -20,7 +20,7 @@
    <Text fx:id="nameField" fill="WHITE" layoutX="268.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0"
          text="Player1 - PLayer2" textAlignment="CENTER"/>
    <VBox fx:id="menuPause" alignment="CENTER" layoutX="220.0" layoutY="120.0" prefHeight="200.0" prefWidth="100.0"
-         stylesheets="@game.css" visible="false">
+         stylesheets="@../styles/game.css" visible="false">
       <children>
          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PAUSED"/>
          <Button mnemonicParsing="false" onAction="#actionResume" text="Resume"/>
