@@ -6,13 +6,14 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Add pause mode&#10;&#10;+ Add pause menu and mode&#10;+ Add reset">
-      <change afterPath="$PROJECT_DIR$/src/bme/brszta/jpong/OnStatisticsListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/bme/brszta/jpong/ScoreManager.java" afterDir="false" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Refactoring code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bme/brszta/jpong/ScoringSide.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/brszta/jpong/ScoringSide.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/brszta/jpong/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/brszta/jpong/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/brszta/jpong/ScoreManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/brszta/jpong/ScoreManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bme/brszta/jpong/controllers/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/brszta/jpong/controllers/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bme/brszta/jpong/gameobjects/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/brszta/jpong/gameobjects/Ball.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/brszta/jpong/gameobjects/Pad.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/brszta/jpong/gameobjects/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/brszta/jpong/gameobjects/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/res/game.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/res/game.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -292,7 +293,7 @@
       <workItem from="1359379250712" duration="1302000" />
       <workItem from="1618943478029" duration="13913000" />
       <workItem from="1618957720145" duration="94000" />
-      <workItem from="1618957858278" duration="9624000" />
+      <workItem from="1618957858278" duration="11800000" />
     </task>
     <task id="LOCAL-00001" summary="Init project">
       <created>1618948610302</created>
@@ -329,7 +330,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618965716302</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Refactoring code">
+      <created>1618967621461</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1618967621461</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -400,7 +408,8 @@
     <MESSAGE value="Add ball&#10;&#10;+ Add ball&#10;+ Add ball basic physics&#10;* Refactor pad to player&#10;* Refactor move action" />
     <MESSAGE value="Add PropertyStorage&#10;&#10;+ Add property storage&#10;+ Add saving and loading props&#10;+ Add game mode selector&#10;+ Add scoring system" />
     <MESSAGE value="Add pause mode&#10;&#10;+ Add pause menu and mode&#10;+ Add reset" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add pause mode&#10;&#10;+ Add pause menu and mode&#10;+ Add reset" />
+    <MESSAGE value="Refactoring code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactoring code" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>

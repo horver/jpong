@@ -15,7 +15,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,6 +118,22 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     void actionResume(ActionEvent event) {
         isPaused = false;
         menuPause.setVisible(false);
+    }
+
+    @FXML
+    void actionLoadState(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load game state");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Game state", "*.state"));
+        File file = Main.showOpenFileDialog(fileChooser);
+        if (file != null && file.exists()) {
+            scoreManager.loadState(file);
+        }
+    }
+
+    @FXML
+    void actionSaveState(ActionEvent event) {
+        scoreManager.saveState();
     }
 
     @Override

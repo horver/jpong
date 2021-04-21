@@ -1,5 +1,14 @@
 package bme.brszta.jpong;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+
 public class ScoreManager implements OnScoreListener {
     private int playerScore;
     private int otherScore;
@@ -17,7 +26,39 @@ public class ScoreManager implements OnScoreListener {
 
     public void setOtherName(String otherName) {
         this.otherName = otherName;
-        onStatisticsListener.onNameTextChange(getPlayerText());
+        if (onStatisticsListener != null) {
+            onStatisticsListener.onNameTextChange(getPlayerText());
+        }
+    }
+
+    public void saveState() {
+        Format c = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
+        File file = new File(playerName + " vs " + otherName + " " + c.format(new Date()) + ".state");
+        try (PrintWriter writer = new PrintWriter(file)) {
+            writer.println(playerName);
+            writer.println(playerScore);
+            writer.println(otherName);
+            writer.println(otherScore);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadState(File file) {
+        if (file == null) {
+            return;
+        }
+
+        try (Scanner scanner = new Scanner(file)) {
+            playerName = scanner.nextLine();
+            playerScore = Integer.parseInt(scanner.nextLine());
+            setOtherName(scanner.nextLine());
+            otherScore = Integer.parseInt(scanner.nextLine());
+
+            scoreChanged();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -28,6 +69,10 @@ public class ScoreManager implements OnScoreListener {
             playerScore++;
         }
 
+        scoreChanged();
+    }
+
+    private void scoreChanged() {
         if (onStatisticsListener != null) {
             onStatisticsListener.onScoreTextChange(playerScore + " : " + otherScore);
         }

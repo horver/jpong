@@ -5,9 +5,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Pad extends GameObject {
+
     public static final int WIDTH = 16;
     public static final int HEIGHT = 64;
-    public static final double SPEED = 2;
 
     public Pad(int x, int y) {
         super(x, y);

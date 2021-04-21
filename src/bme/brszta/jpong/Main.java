@@ -4,8 +4,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -20,6 +22,10 @@ public class Main extends Application {
         switchScene("mainmenu.fxml");
         primaryStage.setTitle("JPong");
         primaryStage.show();
+    }
+
+    public static File showOpenFileDialog(FileChooser fileChooser) {
+        return fileChooser.showOpenDialog(stage);
     }
 
     public static void switchScene(String fxml) {
