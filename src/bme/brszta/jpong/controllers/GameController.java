@@ -1,7 +1,6 @@
 package bme.brszta.jpong.controllers;
 
-import bme.brszta.jpong.Main;
-import bme.brszta.jpong.ScoringSide;
+import bme.brszta.jpong.*;
 import bme.brszta.jpong.gameobjects.Ball;
 import bme.brszta.jpong.gameobjects.GameObject;
 import bme.brszta.jpong.gameobjects.Pad;
@@ -20,7 +19,7 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameController {
+public class GameController implements OnScoreListener, OnStatisticsListener {
     private AnimationTimer animationTimer;
 
     @FXML
@@ -31,10 +30,9 @@ public class GameController {
     private Pad other;
     private Ball ball;
     private GraphicsContext context;
-    private int score1 = 0;
-    private int score2 = 0;
     private final List<GameObject> gameObjects = new ArrayList<>();
     private boolean isPaused = false;
+    private final ScoreManager scoreManager = new ScoreManager();
 
     @FXML
     private Text scoreField;
@@ -47,7 +45,7 @@ public class GameController {
 
     public GameController() {
         prevTime = System.nanoTime();
-
+        scoreManager.setOnStatisticsListener(this);
         animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
@@ -62,7 +60,7 @@ public class GameController {
         // To handle keyboard input
         canvas.setFocusTraversable(true);
 
-        nameField.setText(Main.propertyStorage.getPlayerName() + " - Waiting for other player");
+        onNameTextChange(scoreManager.getPlayerText());
 
         player = new Player(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
         other = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
@@ -72,15 +70,8 @@ public class GameController {
         gameObjects.add(other);
         gameObjects.add(ball);
 
-        ball.setOnScoreListener(side -> {
-            if (side == ScoringSide.PLAYER_LEFT) {
-                score2++;
-            } else {
-                score1++;
-            }
-            gameObjects.forEach(GameObject::restart);
-            scoreField.setText(score1 + " : " + score2);
-        });
+        ball.addOnScoreListener(this);
+        ball.addOnScoreListener(scoreManager);
         animationTimer.start();
     }
 
@@ -125,5 +116,20 @@ public class GameController {
     void actionResume(ActionEvent event) {
         isPaused = false;
         menuPause.setVisible(false);
+    }
+
+    @Override
+    public void onScore(ScoringSide side) {
+        gameObjects.forEach(GameObject::restart);
+    }
+
+    @Override
+    public void onScoreTextChange(String newScoreText) {
+        scoreField.setText(newScoreText);
+    }
+
+    @Override
+    public void onNameTextChange(String newNameText) {
+        nameField.setText(newNameText);
     }
 }

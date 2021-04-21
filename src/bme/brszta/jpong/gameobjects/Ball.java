@@ -7,12 +7,15 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Ball extends GameObject {
     public static final int SIZE = 16;
     public static final double SPEED = 0.7;
 
     private Point2D velocity;
-    private OnScoreListener listener;
+    private List<OnScoreListener> listeners = new ArrayList<>();
 
     public Ball(int x, int y) {
         super(x, y);
@@ -46,17 +49,11 @@ public class Ball extends GameObject {
             velocity = new Point2D(-velocity.getX(), velocity.getY());
         }
 
-        if (position.getX() < 0) {
+        if (position.getX() < 0 || position.getX() > 640 - SIZE) {
             velocity = new Point2D(-velocity.getX(), velocity.getY());
-            if (listener != null) {
-                listener.onScore(ScoringSide.PLAYER_LEFT);
-            }
-        }
-
-        if (position.getX() > 640 - SIZE) {
-            velocity = new Point2D(-velocity.getX(), velocity.getY());
-            if (listener != null) {
-                listener.onScore(ScoringSide.PLAYER_RIGHT);
+            ScoringSide side = position.getX() < 0 ? ScoringSide.PLAYER_SIDE : ScoringSide.OTHER_SIDE;
+            for (OnScoreListener listener : listeners) {
+                listener.onScore(side);
             }
         }
 
@@ -65,8 +62,14 @@ public class Ball extends GameObject {
         super.update(deltaT);
     }
 
-    public void setOnScoreListener(OnScoreListener listener) {
-        this.listener = listener;
+    public void addOnScoreListener(OnScoreListener listener) {
+        if (listener == null) {
+            return;
+        }
+
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
     }
 
     @Override
