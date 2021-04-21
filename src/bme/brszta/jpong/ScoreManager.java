@@ -31,7 +31,7 @@ public class ScoreManager implements OnScoreListener {
         }
     }
 
-    public void saveState() {
+    public boolean saveState() {
         Format c = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
         File file = new File(playerName + " vs " + otherName + " " + c.format(new Date()) + ".state");
         try (PrintWriter writer = new PrintWriter(file)) {
@@ -41,7 +41,9 @@ public class ScoreManager implements OnScoreListener {
             writer.println(otherScore);
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public void loadState(File file) {

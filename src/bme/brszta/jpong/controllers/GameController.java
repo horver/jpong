@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -133,7 +134,11 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     @FXML
     void actionSaveState(ActionEvent event) {
-        scoreManager.saveState();
+        if (!scoreManager.saveState()) {
+            new Alert(Alert.AlertType.ERROR, "Failed to save!").show();
+        } else {
+            new Alert(Alert.AlertType.INFORMATION, "Saved!").show();
+        }
     }
 
     @Override

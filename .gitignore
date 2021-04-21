@@ -1,3 +1,4 @@
 /out/
 /.idea/libraries/
 game.conf
+*.state
