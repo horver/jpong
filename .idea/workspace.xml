@@ -6,9 +6,13 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Optimize property loading">
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Refactor GameController&#10;&#10;+ Add some shortcuts">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/bme/pong/controllers/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/controllers/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/pong/entities/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/entities/Ball.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/pong/entities/GameObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/entities/GameObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/pong/entities/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/entities/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/res/scenes/game.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/res/scenes/game.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,15 +242,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -295,7 +297,11 @@
       <workItem from="1618943478029" duration="13913000" />
       <workItem from="1618957720145" duration="94000" />
       <workItem from="1618957858278" duration="14119000" />
-      <workItem from="1618995138038" duration="6684000" />
+      <workItem from="1618995138038" duration="7087000" />
+      <workItem from="1619011088933" duration="1237000" />
+      <workItem from="1619022432872" duration="6664000" />
+      <workItem from="1619080261116" duration="514000" />
+      <workItem from="1619161633555" duration="4873000" />
     </task>
     <task id="LOCAL-00001" summary="Init project">
       <created>1618948610302</created>
@@ -388,7 +394,14 @@
       <option name="project" value="LOCAL" />
       <updated>1618998930313</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Refactor GameController&#10;&#10;+ Add some shortcuts">
+      <created>1619002590603</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1619002590603</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -467,7 +480,8 @@
     <MESSAGE value="Add loading feedback and reset after load" />
     <MESSAGE value="Add ball direction edge cases&#10;&#10;+ Add edge cases for ball direction&#10;* Fix ball speed to constant value" />
     <MESSAGE value="Optimize property loading" />
-    <option name="LAST_COMMIT_MESSAGE" value="Optimize property loading" />
+    <MESSAGE value="Refactor GameController&#10;&#10;+ Add some shortcuts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor GameController&#10;&#10;+ Add some shortcuts" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>

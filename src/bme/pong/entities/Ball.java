@@ -49,14 +49,14 @@ public class Ball extends GameObject {
 
     public void update(long deltaT, Rectangle2D playerBoundingBox, Rectangle2D otherBoundingBox) {
 
-        if (position.getY() < 0 || position.getY() > 480 - SIZE) {
-            velocity = new Point2D(velocity.getX(), -velocity.getY());
-        }
-
         Rectangle2D boundingBox = getBoundingBox();
 
         if (playerBoundingBox.intersects(boundingBox) || otherBoundingBox.intersects(boundingBox)) {
             velocity = new Point2D(-velocity.getX(), velocity.getY());
+        }
+
+        if (position.getY() < 0 || position.getY() > 480 - SIZE) {
+            velocity = new Point2D(velocity.getX(), -velocity.getY());
         }
 
         if (position.getX() < 0 || position.getX() > 640 - SIZE) {

@@ -33,6 +33,9 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     private Text nameField;
 
     @FXML
+    private Text txtStatus;
+
+    @FXML
     private VBox menuPause;
 
     private AnimationTimer animationTimer;
@@ -100,6 +103,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     private void resetGame() {
         gameObjects.forEach(GameObject::restart);
+        txtStatus.setVisible(false);
     }
 
     @FXML
@@ -113,6 +117,9 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                     menuPause.setVisible(isPaused);
                     break;
                 case SPACE:
+                    if (!isStarted) {
+                        txtStatus.setVisible(false);
+                    }
                     isStarted = true;
                     break;
                 case F7:
@@ -160,7 +167,8 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     @Override
     public void onScore(ScoringSide side) {
         resetGame();
-        isStarted = false;
+        //isStarted = false;
+        txtStatus.setVisible(true);
     }
 
     @Override

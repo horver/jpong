@@ -7,6 +7,7 @@ public class Player extends Pad {
 
     public static final double SPEED = 0.7;
     private MoveAction moveAction = MoveAction.IDLE;
+    private int keyCounter = 0;
 
     public Player(int x, int y) {
         super(x, y);
@@ -18,10 +19,12 @@ public class Player extends Pad {
                 case UP:
                 case W:
                     moveAction = MoveAction.MOVE_UP;
+                    keyCounter++;
                     break;
                 case DOWN:
                 case S:
                     moveAction = MoveAction.MOVE_DOWN;
+                    keyCounter++;
                     break;
             }
         }
@@ -32,8 +35,11 @@ public class Player extends Pad {
                 case W:
                 case DOWN:
                 case S:
-                    moveAction = MoveAction.IDLE;
+                    keyCounter--;
                     break;
+            }
+            if (keyCounter == 0) {
+                moveAction = MoveAction.IDLE;
             }
         }
     }
@@ -54,7 +60,14 @@ public class Player extends Pad {
                 }
                 break;
         }
-
+        System.out.println(keyCounter);
         super.update(deltaT);
+    }
+
+    @Override
+    public void restart() {
+        moveAction = MoveAction.IDLE;
+        keyCounter = 0;
+        super.restart();
     }
 }

@@ -17,6 +17,10 @@ public abstract class GameObject {
         this.position = position;
     }
 
+    public Point2D getPosition() {
+        return position;
+    }
+
     public void update(long deltaT) {
         // TODO: Add Sockets
     }
