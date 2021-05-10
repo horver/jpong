@@ -8,11 +8,10 @@
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Refactor GameController&#10;&#10;+ Add some shortcuts">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bme/pong/controllers/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/controllers/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bme/pong/entities/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/entities/Ball.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bme/pong/entities/GameObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/entities/GameObject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bme/pong/entities/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/entities/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/res/scenes/game.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/res/scenes/game.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JavaFxApplication.iml" beforeDir="false" afterPath="$PROJECT_DIR$/JavaFxApplication.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/pong/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/pong/controllers/ModeSelectorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/controllers/ModeSelectorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bme/pong/storages/PropertyStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bme/pong/storages/PropertyStorage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,10 +66,10 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
-        <option value="Enum" />
         <option value="FxmlFile" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -112,7 +111,9 @@
     <option name="height" value="876" />
   </component>
   <component name="ProjectId" id="1rReTx9tbqZc4clvj6tuvlgVqar" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
@@ -174,13 +175,14 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dynamic.classpath" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/javafx-sdk-11.0.2/lib" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
@@ -208,6 +210,17 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
       <option name="VMOptions" />
       <option name="arguments" />
@@ -223,7 +236,7 @@
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="bme.pong.Main" />
       <module name="JavaFxApplication" />
-      <option name="VM_PARAMETERS" value="--module-path /usr/lib/jvm/java-11-openjfx/lib --add-modules javafx.controls,javafx.fxml" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;$USER_HOME$/Downloads/javafx-sdk-11.0.2/lib/&quot; --add-modules javafx.controls,javafx.fxml" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="sample.*" />
@@ -238,17 +251,6 @@
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
