@@ -1,17 +1,29 @@
 package bme.pong.storages;
 
-import java.io.*;
-import java.util.Scanner;
+import java.util.logging.Logger;
+
+import bme.pong.utils.IConfigMgr;
+import bme.pong.utils.IniParser;
 
 public class PropertyStorage {
     private String playerName;
     private String hostAddress;
     private int hostPort;
     private boolean isClient;
-    private static final String configPath = "game.conf";
+    private IConfigMgr configParser;
+    private final Logger logger;
 
-    public PropertyStorage() {
-        load();
+    public PropertyStorage(String configPath) {
+        this.logger = Logger.getLogger(this.getClass().getName());
+        try {
+            this.configParser = IniParser.fromFile(configPath);
+            load();
+        }
+        catch(Exception ex) {
+            logger.info("Error loading settings from file, loading defaults");
+            this.configParser = new IniParser();
+            loadDefaults();
+        }
     }
 
     public String getPlayerName() {
@@ -46,15 +58,11 @@ public class PropertyStorage {
         isClient = client;
     }
 
-    public void save() {
-        try (PrintWriter writer = new PrintWriter(configPath)) {
-            writer.println(playerName);
-            writer.println(hostAddress);
-            writer.println(hostPort);
-            writer.println(isClient);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void save(String configPath) {
+        this.configParser.setKey("player_name", playerName);
+        this.configParser.setKey("host_address", hostAddress);
+        this.configParser.setKey("port", Integer.toString(hostPort));
+        this.configParser.saveToFile(configPath);
     }
 
     private void loadDefaults() {
@@ -65,18 +73,9 @@ public class PropertyStorage {
     }
 
     public void load() {
-        File config = new File(configPath);
-        if (config.exists()) {
-            try (Scanner scanner = new Scanner(new FileInputStream(config))) {
-                playerName = scanner.nextLine();
-                hostAddress = scanner.nextLine();
-                hostPort = Integer.parseInt(scanner.nextLine());
-                isClient = Boolean.parseBoolean(scanner.nextLine());
-            } catch (FileNotFoundException e) {
-                loadDefaults();
-            }
-        } else {
-            loadDefaults();
-        }
+        playerName = configParser.getKey("player_name", "Player1");
+        hostAddress = configParser.getKey("host_address", "127.0.0.1");
+        hostPort = Integer.parseInt(configParser.getKey("port", "12345"));
+        isClient = true;
     }
 }
