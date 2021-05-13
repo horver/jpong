@@ -1,6 +1,7 @@
 package bme.pong;
 
 import bme.pong.storages.PropertyStorage;
+import bme.pong.utils.IniParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +16,8 @@ import java.net.URL;
 public class Main extends Application {
 
     private static Stage stage;
-    public static final PropertyStorage propertyStorage = new PropertyStorage();
+    public static final String configPath = "game_conf.ini";
+    public static final PropertyStorage propertyStorage = new PropertyStorage(Main.configPath);
 
     @Override
     public void start(Stage primaryStage) {

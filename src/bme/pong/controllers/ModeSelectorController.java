@@ -82,7 +82,7 @@ public class ModeSelectorController {
             Main.propertyStorage.setHostPort(12345);
         }
 
-        Main.propertyStorage.save();
+        Main.propertyStorage.save(Main.configPath);
 
         Main.switchScene("game.fxml");
     }
