@@ -167,7 +167,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     @Override
     public void onScore(ScoringSide side) {
         resetGame();
-        //isStarted = false;
+        isStarted = false;
         txtStatus.setVisible(true);
     }
 

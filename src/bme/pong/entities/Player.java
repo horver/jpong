@@ -1,46 +1,54 @@
 package bme.pong.entities;
 
+import javafx.event.EventType;
 import javafx.geometry.Point2D;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Player extends Pad {
 
     public static final double SPEED = 0.7;
     private MoveAction moveAction = MoveAction.IDLE;
-    private int keyCounter = 0;
+    private final List<KeyCode> keys = new ArrayList<>();
 
     public Player(int x, int y) {
         super(x, y);
     }
 
     public void keyHandler(KeyEvent keyEvent) {
-        if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
-            switch (keyEvent.getCode()) {
-                case UP:
-                case W:
-                    moveAction = MoveAction.MOVE_UP;
-                    keyCounter++;
-                    break;
-                case DOWN:
-                case S:
-                    moveAction = MoveAction.MOVE_DOWN;
-                    keyCounter++;
-                    break;
-            }
+        EventType<KeyEvent> type = keyEvent.getEventType();
+        switch (keyEvent.getCode()) {
+            case UP:
+            case W:
+            case DOWN:
+            case S:
+                if (type == KeyEvent.KEY_PRESSED) {
+                    if (!keys.contains(keyEvent.getCode())) {
+                        keys.add(keyEvent.getCode());
+                    }
+                }
+                if (type == KeyEvent.KEY_RELEASED) {
+                    if (keys.contains(keyEvent.getCode())) {
+                        keys.remove(keyEvent.getCode());
+                    }
+                }
+                break;
         }
 
-        if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED) {
-            switch (keyEvent.getCode()) {
-                case UP:
-                case W:
-                case DOWN:
-                case S:
-                    keyCounter--;
-                    break;
-            }
-            if (keyCounter == 0) {
-                moveAction = MoveAction.IDLE;
-            }
+        if (keys.contains(KeyCode.W) || keys.contains(KeyCode.UP)) {
+            moveAction = MoveAction.MOVE_UP;
+        }
+
+        if (keys.contains(KeyCode.S) || keys.contains(KeyCode.DOWN)) {
+            moveAction = MoveAction.MOVE_DOWN;
+        }
+
+        if (keys.isEmpty() || keys.size() > 2) {
+            moveAction = MoveAction.IDLE;
+            keys.clear();
         }
     }
 
@@ -60,14 +68,13 @@ public class Player extends Pad {
                 }
                 break;
         }
-        System.out.println(keyCounter);
         super.update(deltaT);
     }
 
     @Override
     public void restart() {
         moveAction = MoveAction.IDLE;
-        keyCounter = 0;
+        keys.clear();
         super.restart();
     }
 }
