@@ -1,6 +1,11 @@
 package bme.pong.networking.gameevents;
 
-public class ConnectionEstablishedEvent implements IGameEvent {
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class ConnectionEstablishedEvent implements IGameEvent, Serializable {
     public String guestName;
     public String hostName;
 
@@ -9,6 +14,12 @@ public class ConnectionEstablishedEvent implements IGameEvent {
         hostName = hostPlayerName;
     }
 
-    public String serialize() { return ""; }
-    public void deserialize(String sObj) {}
+    public void writeObject(ObjectOutputStream oos) throws IOException {
+        oos.writeUTF(guestName);
+        oos.writeUTF(hostName);
+    }
+    public void readObject(ObjectInputStream ois) throws IOException {
+        guestName = ois.readUTF();
+        hostName = ois.readUTF();
+    }
 }
