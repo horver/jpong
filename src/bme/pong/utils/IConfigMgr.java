@@ -1,9 +1,13 @@
 package bme.pong.utils;
 
 public interface IConfigMgr {
-    public String getKey(String key);
-    public String getKey(String key, String defaultValue);
-    public void setKey(String key, String value);
-    public String save();
-    public void saveToFile(String filename);
+    String getKey(String key);
+
+    String getKey(String key, String defaultValue);
+
+    void setKey(String key, String value);
+
+    String save();
+
+    void saveToFile(String filename);
 }

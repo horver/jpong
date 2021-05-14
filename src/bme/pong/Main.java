@@ -1,7 +1,8 @@
 package bme.pong;
 
+import bme.pong.networking.EventBus;
+import bme.pong.networking.NetworkHandler;
 import bme.pong.storages.PropertyStorage;
-import bme.pong.utils.IniParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +19,7 @@ public class Main extends Application {
     private static Stage stage;
     public static final String configPath = "game_conf.ini";
     public static final PropertyStorage propertyStorage = new PropertyStorage(Main.configPath);
+    public static final NetworkHandler networkHandler = new NetworkHandler(new EventBus());
 
     @Override
     public void start(Stage primaryStage) {

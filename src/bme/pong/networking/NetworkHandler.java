@@ -1,37 +1,56 @@
 package bme.pong.networking;
 
-import bme.pong.utils.IConfigMgr;
+import bme.pong.Main;
 
-import java.util.logging.Logger;
-import java.io.ObjectOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.*;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Logger;
 
 public class NetworkHandler implements Runnable {
-    private int _port;
+    private final int port = Main.propertyStorage.getHostPort();
+    private final boolean isClient = Main.propertyStorage.isClient();
     private EventBus _bus;
-    private Logger _logger;
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private Socket _socket;
+    private ServerSocket listener;
+    private Socket clientSocket;
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
 
-    public NetworkHandler(EventBus bus, IConfigMgr cfg) {
+    public NetworkHandler(EventBus bus) {
         this._bus = bus;
-        this._port = Integer.parseInt(cfg.getKey("port"));
-        this._logger = Logger.getLogger(this.getClass().getName());
     }
 
     public void setHost() {
-        // listen() and accept()
+        try {
+            listener = new ServerSocket(port);
+        } catch (IOException e) {
+            logger.info("Error set server socket");
+            e.printStackTrace();
+        }
     }
 
     public void setGuest() {
-        // connect()
+        String serverAddress = Main.propertyStorage.getHostAddress();
+        try {
+            clientSocket = new Socket(serverAddress, port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {
-        this._logger.info("Starting networking thread");
+        this.logger.info("Starting networking thread");
+        try {
+            while (true) {
+                Socket socket = listener.accept();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void monitorEventBus() {
