@@ -1,6 +1,9 @@
 package bme.pong.networking;
 
+import java.sql.Time;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
 import bme.pong.networking.gameevents.*;
 
 public class EventBus {
@@ -8,7 +11,7 @@ public class EventBus {
     private LinkedBlockingQueue<IGameEvent> _incoming; // Events received from opponent
     private LinkedBlockingQueue<IGameEvent> _outgoing; // Events to be sent to the opponent
 
-    EventBus() {
+    public EventBus() {
         this._incoming = new LinkedBlockingQueue<IGameEvent>(MAX_QUEUE_EVENTS);
         this._outgoing = new LinkedBlockingQueue<IGameEvent>(MAX_QUEUE_EVENTS);
     }
@@ -25,7 +28,16 @@ public class EventBus {
         return this._incoming.poll();
     }
 
+    IGameEvent popIncomingBlocking() throws InterruptedException {
+        return this._incoming.take();
+    }
+
     IGameEvent popOutgoing() {
         return this._outgoing.poll();
+
+    }
+
+    IGameEvent popOutgoingBlocking() throws InterruptedException {
+        return this._outgoing.take();
     }
 }

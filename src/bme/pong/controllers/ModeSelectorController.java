@@ -1,6 +1,9 @@
 package bme.pong.controllers;
 
 import bme.pong.Main;
+import bme.pong.networking.EventBus;
+import bme.pong.networking.NetworkHandler;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -83,6 +86,13 @@ public class ModeSelectorController {
         }
 
         Main.propertyStorage.save(Main.configPath);
+
+        EventBus bus = new EventBus();
+        NetworkHandler networkHandler = new NetworkHandler(bus, Main.propertyStorage);
+        NetworkHandler.NetworkRole role = Main.propertyStorage.isClient() ? NetworkHandler.NetworkRole.GUEST :
+                NetworkHandler.NetworkRole.HOST;
+        networkHandler.setNetworkRole(role);
+        networkHandler.detach();
 
         Main.switchScene("game.fxml");
     }
