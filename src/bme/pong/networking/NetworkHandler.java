@@ -2,7 +2,6 @@ package bme.pong.networking;
 
 import bme.pong.Main;
 
-import javax.net.ServerSocketFactory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,7 +27,7 @@ public class NetworkHandler implements Runnable {
     public void setHost() {
         logger.info("Host mode");
         try {
-            serverSocket = ServerSocketFactory.getDefault().createServerSocket(port);
+            serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,46 +41,53 @@ public class NetworkHandler implements Runnable {
 
     public void run() {
         if (isClient) {
-            try (
-                    Socket socket = new Socket(serverAddress, port);
-                    ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
-                    ObjectInputStream reader = new ObjectInputStream(socket.getInputStream())
-            ) {
-                NetworkMessage message;
-                while (true) {
-                    message = (NetworkMessage) reader.readObject();
-                    messageBus.pushIncoming(message);
-
-                    message = messageBus.popOutgoing();
-                    writer.writeObject(message);
-                }
-            } catch (IOException | ClassNotFoundException e) {
+            try {
+                Socket socket = new Socket(serverAddress, port);
+                exchangeData(socket);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            try (
-                    Socket socket = serverSocket.accept();
-                    ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
-                    ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream())
-            ) {
-                NetworkMessage message;
-                while (true) {
+            try {
+                Socket socket = serverSocket.accept();
+                exchangeData(socket);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-                    message = messageBus.popOutgoing();
-                    writer.writeObject(message);
-
-                    message = (NetworkMessage) reader.readObject();
-                    messageBus.pushIncoming(message);
-
-                    // TODO: nemmegybazdmeg
-                    if (!socket.isConnected()) {
-                        break;
+    private void exchangeData(Socket socket) {
+        try {
+            ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
+            NetworkMessage message;
+            while (socket.isConnected()) {
+                synchronized (messageBus.out) {
+                    message = messageBus.out;
+                    try {
+                        writer.writeObject(message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                synchronized (messageBus.in) {
+                    try {
+                        NetworkMessage message2 = (NetworkMessage) reader.readObject();
+                        if (message2 != null) {
+                            messageBus.in.update(message2);
+                            System.out.println(message2.getPlayerName());
+                            System.out.println(message2.getOtherName());
+                            System.out.println(isClient);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

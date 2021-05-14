@@ -5,7 +5,6 @@ import bme.pong.entities.*;
 import bme.pong.listeners.OnScoreListener;
 import bme.pong.listeners.OnStatisticsListener;
 import bme.pong.networking.MessageBus;
-import bme.pong.networking.NetworkMessage;
 import bme.pong.storages.ScoreManager;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -54,7 +53,6 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     private final boolean isClient = Main.propertyStorage.isClient();
 
     private final MessageBus messageBus = Main.networkHandler.getMessageBus();
-    private NetworkMessage message = new NetworkMessage();
 
     public GameController() {
         prevTime = System.nanoTime();
@@ -104,14 +102,17 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 // Server mode
 
                 // Update client data
-                message.setOtherPositionY(player.getPosition().getY());
-                message.setBallX(ball.getPosition().getX());
-                message.setBallY(ball.getPosition().getY());
-                messageBus.pushOutgoing(message);
+                synchronized (messageBus.out) {
+                    messageBus.out.setOtherPositionY(player.getPosition().getY());
+                    messageBus.out.setBallX(ball.getPosition().getX());
+                    messageBus.out.setBallY(ball.getPosition().getY());
+                    messageBus.out.setPlayerName("FKOAFKA");
+                }
 
                 // Update self data
-                message = messageBus.popIncoming();
-                other.setPosition(new Point2D(other.getPosition().getX(), message.getPlayerPositionY()));
+                synchronized (messageBus.in) {
+                    other.setPosition(new Point2D(other.getPosition().getX(), messageBus.in.getPlayerPositionY()));
+                }
 
                 player.update(deltaT);
                 ball.update(deltaT, player.getBoundingBox(), other.getBoundingBox());
@@ -119,13 +120,16 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 // Client mode
 
                 // Update self data
-                message = messageBus.popIncoming();
-                other.setPosition(new Point2D(other.getPosition().getX(), message.getOtherPositionY()));
-                ball.setPosition(new Point2D(message.getBallX(), message.getBallY()));
+                synchronized (messageBus.in) {
+                    other.setPosition(new Point2D(other.getPosition().getX(), messageBus.in.getOtherPositionY()));
+                    ball.setPosition(new Point2D(messageBus.in.getBallX(), messageBus.in.getBallY()));
+                }
 
                 // Update server data
-                message.setPlayerPositionY(player.getPosition().getY());
-                messageBus.pushOutgoing(message);
+                synchronized (messageBus.out) {
+                    messageBus.out.setPlayerPositionY(player.getPosition().getY());
+                    messageBus.out.setOtherName("OKOK");
+                }
 
                 player.update(deltaT);
             }
