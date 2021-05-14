@@ -84,6 +84,15 @@ public class ModeSelectorController {
 
         Main.propertyStorage.save(Main.configPath);
 
+        // Setup networking mode
+        if (isJoinSelected) {
+            Main.networkHandler.setClient();
+        } else {
+            Main.networkHandler.setHost();
+        }
+
+        Main.networking.start();
+
         Main.switchScene("game.fxml");
     }
 }

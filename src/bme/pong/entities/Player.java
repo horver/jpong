@@ -52,7 +52,6 @@ public class Player extends Pad {
         }
     }
 
-    @Override
     public void update(long deltaT) {
         switch (moveAction) {
             case MOVE_UP:
@@ -68,7 +67,6 @@ public class Player extends Pad {
                 }
                 break;
         }
-        super.update(deltaT);
     }
 
     @Override

@@ -2,6 +2,7 @@ package bme.pong.networking;
 
 import bme.pong.Main;
 
+import javax.net.ServerSocketFactory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,61 +12,76 @@ import java.util.logging.Logger;
 
 public class NetworkHandler implements Runnable {
     private final int port = Main.propertyStorage.getHostPort();
-    private final boolean isClient = Main.propertyStorage.isClient();
-    private EventBus _bus;
+    private boolean isClient = false;
+    private String serverAddress;
+
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private ServerSocket listener;
-    private Socket clientSocket;
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
+    private ServerSocket serverSocket;
 
-    public NetworkHandler(EventBus bus) {
-        this._bus = bus;
+    public MessageBus getMessageBus() {
+        return messageBus;
     }
+
+    private final MessageBus messageBus = new MessageBus();
 
     public void setHost() {
+        logger.info("Host mode");
         try {
-            listener = new ServerSocket(port);
+            serverSocket = ServerSocketFactory.getDefault().createServerSocket(port);
         } catch (IOException e) {
-            logger.info("Error set server socket");
             e.printStackTrace();
         }
     }
 
-    public void setGuest() {
-        String serverAddress = Main.propertyStorage.getHostAddress();
-        try {
-            clientSocket = new Socket(serverAddress, port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setClient() {
+        isClient = true;
+        serverAddress = Main.propertyStorage.getHostAddress();
+        logger.info("Client mode");
     }
 
     public void run() {
-        this.logger.info("Starting networking thread");
-        try {
-            while (true) {
-                Socket socket = listener.accept();
+        if (isClient) {
+            try (
+                    Socket socket = new Socket(serverAddress, port);
+                    ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream());
+                    ObjectInputStream reader = new ObjectInputStream(socket.getInputStream())
+            ) {
+                NetworkMessage message;
+                while (true) {
+                    message = (NetworkMessage) reader.readObject();
+                    messageBus.pushIncoming(message);
+
+                    message = messageBus.popOutgoing();
+                    writer.writeObject(message);
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            try (
+                    Socket socket = serverSocket.accept();
+                    ObjectInputStream reader = new ObjectInputStream(socket.getInputStream());
+                    ObjectOutputStream writer = new ObjectOutputStream(socket.getOutputStream())
+            ) {
+                NetworkMessage message;
+                while (true) {
+
+                    message = messageBus.popOutgoing();
+                    writer.writeObject(message);
+
+                    message = (NetworkMessage) reader.readObject();
+                    messageBus.pushIncoming(message);
+
+                    // TODO: nemmegybazdmeg
+                    if (!socket.isConnected()) {
+                        break;
+                    }
+                }
+
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-    }
-
-    private void monitorEventBus() {
-
-    }
-
-    private void pollSocket() {
-
-    }
-
-    private void sendEvent() {
-
-    }
-
-    private void recvEvent() {
-
     }
 }

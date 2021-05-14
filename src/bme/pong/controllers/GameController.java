@@ -4,10 +4,13 @@ import bme.pong.Main;
 import bme.pong.entities.*;
 import bme.pong.listeners.OnScoreListener;
 import bme.pong.listeners.OnStatisticsListener;
+import bme.pong.networking.MessageBus;
+import bme.pong.networking.NetworkMessage;
 import bme.pong.storages.ScoreManager;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -48,6 +51,10 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     private boolean isPaused = false;
     private boolean isStarted = false;
     private final ScoreManager scoreManager = new ScoreManager();
+    private final boolean isClient = Main.propertyStorage.isClient();
+
+    private final MessageBus messageBus = Main.networkHandler.getMessageBus();
+    private NetworkMessage message = new NetworkMessage();
 
     public GameController() {
         prevTime = System.nanoTime();
@@ -68,8 +75,15 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
         onNameTextChange(scoreManager.getPlayerText());
 
-        player = new Player(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
-        other = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        // Side depends on server-client mode
+        if (isClient) {
+            player = new Player(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+            other = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        } else {
+            player = new Player((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+            other = new Pad(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        }
+
         ball = new Ball((int) canvas.getWidth() / 2 - Ball.SIZE / 2, (int) canvas.getHeight() / 2 - Ball.SIZE / 2);
 
         gameObjects.add(player);
@@ -86,9 +100,35 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         prevTime = l;
 
         if (!isPaused && isStarted) {
-            player.update(deltaT);
-            other.update(deltaT);
-            ball.update(deltaT, player.getBoundingBox(), other.getBoundingBox());
+            if (!isClient) {
+                // Server mode
+
+                // Update client data
+                message.setOtherPositionY(player.getPosition().getY());
+                message.setBallX(ball.getPosition().getX());
+                message.setBallY(ball.getPosition().getY());
+                messageBus.pushOutgoing(message);
+
+                // Update self data
+                message = messageBus.popIncoming();
+                other.setPosition(new Point2D(other.getPosition().getX(), message.getPlayerPositionY()));
+
+                player.update(deltaT);
+                ball.update(deltaT, player.getBoundingBox(), other.getBoundingBox());
+            } else {
+                // Client mode
+
+                // Update self data
+                message = messageBus.popIncoming();
+                other.setPosition(new Point2D(other.getPosition().getX(), message.getOtherPositionY()));
+                ball.setPosition(new Point2D(message.getBallX(), message.getBallY()));
+
+                // Update server data
+                message.setPlayerPositionY(player.getPosition().getY());
+                messageBus.pushOutgoing(message);
+
+                player.update(deltaT);
+            }
         }
 
         drawer();
