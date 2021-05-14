@@ -25,17 +25,19 @@ public class NetworkHandler implements Runnable {
     private Socket _sock;
     private ObjectOutputStream _oos;
     private NetworkRole _role;
+    private AbortInterface _abortHandler;
 
-    public NetworkHandler(EventBus bus, PropertyStorage storage) {
+    public NetworkHandler(EventBus bus, PropertyStorage storage, AbortInterface abortHandler) {
         this._bus = bus;
         this._port = storage.getHostPort();
         this._host = storage.getHostAddress();
         this._playerName = storage.getPlayerName();
         this._logger = Logger.getLogger(this.getClass().getName());
+        this._abortHandler = abortHandler;
     }
 
     public void detach() {
-        (new Thread(this)).start();
+        (new Thread(this, "NetworkHandler")).start();
     }
 
     public void setNetworkRole(NetworkRole role) {
@@ -58,24 +60,28 @@ public class NetworkHandler implements Runnable {
     }
 
     private void setHost() throws IOException {
+        _logger.info("I'm a host");
         _serverSock = new ServerSocket(_port);
         _sock = _serverSock.accept();
-        initStreams();
+        _oos = new ObjectOutputStream(_sock.getOutputStream());
+        initListeners();
     }
 
     private void setGuest() throws IOException {
+        _logger.info("I'm a guest");
         _sock = new Socket(_host, _port);
-        initStreams();
+        _oos = new ObjectOutputStream(_sock.getOutputStream());
         ConnectionRequestEvent connReq = new ConnectionRequestEvent(_playerName);
         _logger.info("Sending connection request event");
         sendEvent((IGameEvent) connReq);
+        initListeners();
     }
 
-    private void initStreams() {
+    private void initListeners() {
         try {
-            _oos = new ObjectOutputStream(_sock.getOutputStream());
-            NetworkListener listener = new NetworkListener(_sock, _bus);
+            NetworkListener listener = new NetworkListener(_sock, _bus, _abortHandler);
             listener.detach();
+            monitorEventBus();
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -85,12 +91,24 @@ public class NetworkHandler implements Runnable {
     private void monitorEventBus() {
         while (true) {
             try {
+                _abortHandler.check();
                 IGameEvent event = _bus.popOutgoingBlocking();
                 _logger.info("Popped event from bus: " + event.getClass().getName());
-                sendEvent(event);
+                if (event instanceof ConnectionRequestEvent) {
+                    handleConnectionRequest((ConnectionRequestEvent) event);
+                }
+                else {
+                    sendEvent(event);
+                }
+            }
+            catch (AbortException ex) {
+                _logger.info("Thread " + Thread.currentThread().getName() + " has been aborted");
+                break;
             }
             catch (Exception ex) {
                 ex.printStackTrace();
+                _logger.info("NetworkHandler shat itself, exiting");
+                System.exit(1);
             }
         }
     }

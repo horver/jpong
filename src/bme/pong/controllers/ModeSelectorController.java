@@ -1,6 +1,8 @@
 package bme.pong.controllers;
 
 import bme.pong.Main;
+import bme.pong.networking.AbortHandler;
+import bme.pong.networking.AbortInterface;
 import bme.pong.networking.EventBus;
 import bme.pong.networking.NetworkHandler;
 
@@ -88,7 +90,7 @@ public class ModeSelectorController {
         Main.propertyStorage.save(Main.configPath);
 
         EventBus bus = new EventBus();
-        NetworkHandler networkHandler = new NetworkHandler(bus, Main.propertyStorage);
+        NetworkHandler networkHandler = new NetworkHandler(bus, Main.propertyStorage, (AbortInterface) Main.abortHandler);
         NetworkHandler.NetworkRole role = Main.propertyStorage.isClient() ? NetworkHandler.NetworkRole.GUEST :
                 NetworkHandler.NetworkRole.HOST;
         networkHandler.setNetworkRole(role);

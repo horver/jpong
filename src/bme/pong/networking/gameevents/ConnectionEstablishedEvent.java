@@ -14,6 +14,8 @@ public class ConnectionEstablishedEvent implements IGameEvent, Serializable {
         hostName = hostPlayerName;
     }
 
+    public String getName() { return "Connection established. Players (host - guest): " + hostName + " - " + guestName; }
+
     public void writeObject(ObjectOutputStream oos) throws IOException {
         oos.writeUTF(guestName);
         oos.writeUTF(hostName);

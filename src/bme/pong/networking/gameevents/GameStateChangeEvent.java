@@ -10,6 +10,8 @@ import java.io.Serializable;
 public class GameStateChangeEvent implements IGameEvent, Serializable {
     public GameState newState;
 
+    public String getName() { return "Game state change to: " + newState.name(); }
+
     public void writeObject(ObjectOutputStream oos) throws IOException, ClassNotFoundException {
         oos.writeObject(newState);
     }

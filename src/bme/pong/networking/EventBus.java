@@ -1,8 +1,6 @@
 package bme.pong.networking;
 
-import java.sql.Time;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import bme.pong.networking.gameevents.*;
 

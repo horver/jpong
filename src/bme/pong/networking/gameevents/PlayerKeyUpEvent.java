@@ -12,6 +12,8 @@ public class PlayerKeyUpEvent implements IGameEvent, Serializable {
         keyCode = key;
     }
 
+    public String getName() { return "Player key up event with keycode: " + Integer.toString(keyCode); }
+
     public void writeObject(ObjectOutputStream oos) throws IOException {
         oos.writeInt(keyCode);
     }

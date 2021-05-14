@@ -1,5 +1,6 @@
 package bme.pong;
 
+import bme.pong.networking.AbortHandler;
 import bme.pong.storages.PropertyStorage;
 import bme.pong.utils.IniParser;
 import javafx.application.Application;
@@ -18,6 +19,7 @@ public class Main extends Application {
     private static Stage stage;
     public static final String configPath = "game_conf.ini";
     public static final PropertyStorage propertyStorage = new PropertyStorage(Main.configPath);
+    public static final AbortHandler abortHandler = new AbortHandler();
 
     @Override
     public void start(Stage primaryStage) {

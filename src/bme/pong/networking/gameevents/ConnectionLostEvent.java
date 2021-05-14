@@ -6,6 +6,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class ConnectionLostEvent implements IGameEvent, Serializable {
+
+    public String getName() { return "Connection lost"; }
+
     public void writeObject(ObjectOutputStream oos) {}
     public void readObject(ObjectInputStream ois)  {}
 }

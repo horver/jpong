@@ -12,6 +12,8 @@ public class ConnectionRequestEvent implements IGameEvent, Serializable {
         guestName = name;
     }
 
+    public String getName() { return "Connection request event, guest name: " + guestName; }
+
     public void writeObject(ObjectOutputStream oos) throws IOException {
         oos.writeUTF(guestName);
     }
