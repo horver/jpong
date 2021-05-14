@@ -1,6 +1,6 @@
 package bme.pong.networking;
 
 public class MessageBus {
-    public final NetworkMessage out = new NetworkMessage();
-    public final NetworkMessage in = new NetworkMessage();
+    public NetworkMessage out = new NetworkMessage();
+    public NetworkMessage in = new NetworkMessage();
 }

@@ -5,6 +5,7 @@ import bme.pong.entities.*;
 import bme.pong.listeners.OnScoreListener;
 import bme.pong.listeners.OnStatisticsListener;
 import bme.pong.networking.MessageBus;
+import bme.pong.networking.NetworkMessage;
 import bme.pong.storages.ScoreManager;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -102,11 +103,10 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 // Server mode
 
                 // Update client data
+                messageBus.out = new NetworkMessage();
                 synchronized (messageBus.out) {
-                    messageBus.out.setOtherPositionY(player.getPosition().getY());
-                    messageBus.out.setBallX(ball.getPosition().getX());
-                    messageBus.out.setBallY(ball.getPosition().getY());
-                    messageBus.out.setPlayerName("FKOAFKA");
+                    messageBus.out.setOtherPositionY(player.getPosition());
+                    messageBus.out.setBallPosition(ball.getPosition());
                 }
 
                 // Update self data
@@ -119,16 +119,16 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             } else {
                 // Client mode
 
+                // Update server data
+                messageBus.out = new NetworkMessage();
+                synchronized (messageBus.out) {
+                    messageBus.out.setPlayerPositionY(player.getPosition());
+                }
+
                 // Update self data
                 synchronized (messageBus.in) {
                     other.setPosition(new Point2D(other.getPosition().getX(), messageBus.in.getOtherPositionY()));
-                    ball.setPosition(new Point2D(messageBus.in.getBallX(), messageBus.in.getBallY()));
-                }
-
-                // Update server data
-                synchronized (messageBus.out) {
-                    messageBus.out.setPlayerPositionY(player.getPosition().getY());
-                    messageBus.out.setOtherName("OKOK");
+                    ball.setPosition(messageBus.in.getBallPosition());
                 }
 
                 player.update(deltaT);

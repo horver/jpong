@@ -1,5 +1,7 @@
 package bme.pong.networking;
 
+import javafx.geometry.Point2D;
+
 import java.io.Serializable;
 
 public class NetworkMessage implements Serializable {
@@ -13,16 +15,29 @@ public class NetworkMessage implements Serializable {
     private double ballX;
     private double ballY;
 
-    @Override
-    public String toString() {
-        return "NetworkMessage{" +
-                "playerName='" + playerName + '\'' +
-                ", otherName='" + otherName + '\'' +
-                ", playerPositionY=" + playerPositionY +
-                ", otherPositionY=" + otherPositionY +
-                ", ballX=" + ballX +
-                ", ballY=" + ballY +
-                '}';
+    public void setPlayerPositionY(Point2D position) {
+        playerPositionY = position.getY();
+    }
+
+    public double getPlayerPositionY() {
+        return playerPositionY;
+    }
+
+    public void setOtherPositionY(Point2D position) {
+        otherPositionY = position.getY();
+    }
+
+    public double getOtherPositionY() {
+        return otherPositionY;
+    }
+
+    public void setBallPosition(Point2D position) {
+        ballX = position.getX();
+        ballY = position.getY();
+    }
+
+    public Point2D getBallPosition() {
+        return new Point2D(ballX, ballY);
     }
 
     public String getPlayerName() {
@@ -39,51 +54,5 @@ public class NetworkMessage implements Serializable {
 
     public void setOtherName(String otherName) {
         this.otherName = otherName;
-    }
-
-    public double getPlayerPositionY() {
-        return playerPositionY;
-    }
-
-    public void setPlayerPositionY(double playerPositionY) {
-        this.playerPositionY = playerPositionY;
-    }
-
-    public double getOtherPositionY() {
-        return otherPositionY;
-    }
-
-    public void setOtherPositionY(double otherPositionY) {
-        this.otherPositionY = otherPositionY;
-    }
-
-    public double getBallX() {
-        return ballX;
-    }
-
-    public void setBallX(double ballX) {
-        this.ballX = ballX;
-    }
-
-    public double getBallY() {
-        return ballY;
-    }
-
-    public void setBallY(double ballY) {
-        this.ballY = ballY;
-    }
-
-    public void update(NetworkMessage message) {
-        System.out.println(this.playerName);
-        playerName = message.getPlayerName();
-        System.out.println(this.playerName);
-        otherName = message.getOtherName();
-
-        playerPositionY = message.getPlayerPositionY();
-        otherPositionY = message.getOtherPositionY();
-
-        ballX = message.getBallX();
-        ballY = message.getBallY();
-        System.out.println("Update message");
     }
 }

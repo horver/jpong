@@ -65,25 +65,23 @@ public class NetworkHandler implements Runnable {
             while (socket.isConnected()) {
                 synchronized (messageBus.out) {
                     message = messageBus.out;
-                    try {
-                        writer.writeObject(message);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
 
-                synchronized (messageBus.in) {
-                    try {
-                        NetworkMessage message2 = (NetworkMessage) reader.readObject();
-                        if (message2 != null) {
-                            messageBus.in.update(message2);
-                            System.out.println(message2.getPlayerName());
-                            System.out.println(message2.getOtherName());
-                            System.out.println(isClient);
+                try {
+                    writer.writeObject(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    message = (NetworkMessage) reader.readObject();
+                    if (message != null) {
+                        synchronized (messageBus.in) {
+                            messageBus.in = message;
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         } catch (IOException e) {
