@@ -2,6 +2,7 @@ package bme.pong.networking;
 
 import bme.pong.storages.PropertyStorage;
 import bme.pong.networking.gameevents.*;
+import bme.pong.threading.ThreadMgr;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -25,19 +26,19 @@ public class NetworkHandler implements Runnable {
     private Socket _sock;
     private ObjectOutputStream _oos;
     private NetworkRole _role;
-    private AbortInterface _abortHandler;
+    private ThreadMgr _threadManager;
 
-    public NetworkHandler(EventBus bus, PropertyStorage storage, AbortInterface abortHandler) {
+    public NetworkHandler(EventBus bus, PropertyStorage storage, ThreadMgr tmgr) {
         this._bus = bus;
         this._port = storage.getHostPort();
         this._host = storage.getHostAddress();
         this._playerName = storage.getPlayerName();
         this._logger = Logger.getLogger(this.getClass().getName());
-        this._abortHandler = abortHandler;
+        this._threadManager = tmgr;
     }
 
     public void detach() {
-        (new Thread(this, "NetworkHandler")).start();
+        _threadManager.startThread(this, "NetworkHandler");
     }
 
     public void setNetworkRole(NetworkRole role) {
@@ -79,7 +80,7 @@ public class NetworkHandler implements Runnable {
 
     private void initListeners() {
         try {
-            NetworkListener listener = new NetworkListener(_sock, _bus, _abortHandler);
+            NetworkListener listener = new NetworkListener(_sock, _bus, _threadManager);
             listener.detach();
             monitorEventBus();
         }
@@ -88,10 +89,9 @@ public class NetworkHandler implements Runnable {
         }
     }
 
-    private void monitorEventBus() {
+    private void monitorEventBus() throws IOException {
         while (true) {
             try {
-                _abortHandler.check();
                 IGameEvent event = _bus.popOutgoingBlocking();
                 _logger.info("Popped event from bus: " + event.getClass().getName());
                 if (event instanceof ConnectionRequestEvent) {
@@ -101,30 +101,25 @@ public class NetworkHandler implements Runnable {
                     sendEvent(event);
                 }
             }
-            catch (AbortException ex) {
-                _logger.info("Thread " + Thread.currentThread().getName() + " has been aborted");
+            catch (InterruptedException ex) {
+                _logger.info("Thread " + Thread.currentThread().getName() + " has been fukken nuked");
+                _sock.close(); // close socket because there is no other way to kill the socket listener thread
                 break;
             }
-            catch (Exception ex) {
+            catch (IOException ex) {
                 ex.printStackTrace();
                 _logger.info("NetworkHandler shat itself, exiting");
-                System.exit(1);
+                _bus.pushIncoming(new ConnectionLostEvent());
             }
         }
     }
 
-    private void sendEvent(IGameEvent event) {
-        try {
-            _logger.info("Sending class: " + event.getClass().getName());
-            _oos.writeObject(event);
-        }
-        catch (Exception ex) {
-            _logger.info("Error while sending event");
-            ex.printStackTrace();
-        }
+    private void sendEvent(IGameEvent event) throws IOException {
+        _logger.info("Sending class: " + event.getClass().getName());
+        _oos.writeObject(event);
     }
 
-    private void handleConnectionRequest(ConnectionRequestEvent req) {
+    private void handleConnectionRequest(ConnectionRequestEvent req) throws IOException {
         ConnectionEstablishedEvent respEvent = new ConnectionEstablishedEvent(req.guestName, this._playerName);
         sendEvent((IGameEvent) respEvent);
         _bus.pushIncoming((IGameEvent) respEvent);

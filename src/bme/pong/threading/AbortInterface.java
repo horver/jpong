@@ -1,4 +1,4 @@
-package bme.pong.networking;
+package bme.pong.threading;
 
 // Interface for aborting long-running operations, e.g. infinite loops
 public interface AbortInterface {

@@ -1,4 +1,4 @@
-package bme.pong.networking;
+package bme.pong.threading;
 
 public class AbortException extends Exception {
     public AbortException(String msg) {

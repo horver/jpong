@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 import java.net.*;
 
 import bme.pong.networking.gameevents.*;
+import bme.pong.threading.AbortException;
+import bme.pong.threading.AbortInterface;
+import bme.pong.threading.ThreadMgr;
 
 public class NetworkListener implements Runnable {
 
@@ -13,18 +16,18 @@ public class NetworkListener implements Runnable {
     private EventBus _bus;
     private Logger _logger;
     private ObjectInputStream _ois;
-    private AbortInterface _abortHandler;
+    private ThreadMgr _threadManager;
 
-    public NetworkListener(Socket sock, EventBus bus, AbortInterface ah) throws IOException {
+    public NetworkListener(Socket sock, EventBus bus, ThreadMgr tmgr) throws IOException {
         this._sock = sock;
         this._bus = bus;
         this._logger = Logger.getLogger(this.getClass().getName());
         this._ois = new ObjectInputStream(_sock.getInputStream());
-        this._abortHandler = ah;
+        this._threadManager = tmgr;
     }
 
     public void detach() {
-        (new Thread(this, "Socket listener")).start();
+        _threadManager.startThread(this, "Socket listener");
     }
 
     @Override
@@ -32,18 +35,18 @@ public class NetworkListener implements Runnable {
         _logger.info("Starting listener thread - thread ID is: " + Thread.currentThread().getId());
         while (true) {
             try {
-                _abortHandler.check();
                 _logger.info("Waiting to read event");
-                enqueueEvent((IGameEvent) _ois.readObject());
+                enqueueEvent((IGameEvent) _ois.readObject()); // ois doesn't throw InterruptedException - what the actual fuck?
             }
-            catch (AbortException ex) {
-                _logger.info("Thread " + Thread.currentThread().getName() + " has been aborted");
+            /*catch (InterruptedException ex) {
+                _logger.info("Thread " + Thread.currentThread().getName() + " has been fukken nuked");
                 break;
-            }
+            }*/
             catch (Exception ex) {
                 ex.printStackTrace();
                 _logger.info("NetworkHandler shat itself, exiting");
-                System.exit(1);
+                break;
+                //System.exit(1);
             }
         }
     }
