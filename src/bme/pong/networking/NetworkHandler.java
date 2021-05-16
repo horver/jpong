@@ -7,7 +7,6 @@ import bme.pong.threading.ThreadMgr;
 import java.io.IOException;
 import java.util.logging.Logger;
 import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 import java.net.*;
 
 public class NetworkHandler implements Runnable {
@@ -108,7 +107,7 @@ public class NetworkHandler implements Runnable {
             }
             catch (IOException ex) {
                 ex.printStackTrace();
-                _logger.info("NetworkHandler shat itself, exiting");
+                _logger.info("NetworkHandler shat itself or the connection was lost");
                 _bus.pushIncoming(new ConnectionLostEvent());
             }
         }

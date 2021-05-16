@@ -21,7 +21,7 @@ public class Main extends Application {
     public static final String configPath = "game_conf.ini";
     public static final PropertyStorage propertyStorage = new PropertyStorage(Main.configPath);
     public static final EventBus eventBus = new EventBus();
-    public static ThreadMgr threadMgr = new ThreadMgr();
+    public static final ThreadMgr threadMgr = new ThreadMgr();
 
     @Override
     public void start(Stage primaryStage) {

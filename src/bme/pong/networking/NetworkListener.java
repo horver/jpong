@@ -36,17 +36,11 @@ public class NetworkListener implements Runnable {
         while (true) {
             try {
                 _logger.info("Waiting to read event");
-                enqueueEvent((IGameEvent) _ois.readObject()); // ois doesn't throw InterruptedException - what the actual fuck?
+                enqueueEvent((IGameEvent) _ois.readObject()); // readObject() doesn't throw InterruptedException
             }
-            /*catch (InterruptedException ex) {
-                _logger.info("Thread " + Thread.currentThread().getName() + " has been fukken nuked");
-                break;
-            }*/
             catch (Exception ex) {
-                ex.printStackTrace();
-                _logger.info("NetworkHandler shat itself, exiting");
+                _logger.info("Shutting down NetworkListener thread");
                 break;
-                //System.exit(1);
             }
         }
     }

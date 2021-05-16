@@ -4,7 +4,9 @@ import bme.pong.Main;
 import bme.pong.entities.*;
 import bme.pong.listeners.OnScoreListener;
 import bme.pong.listeners.OnStatisticsListener;
+import bme.pong.networking.gameevents.*;
 import bme.pong.storages.ScoreManager;
+import bme.pong.entities.GameState;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -81,6 +83,49 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         animationTimer.start();
     }
 
+    private void handleGameStateChange(GameState gs) {
+        switch (gs) {
+            case PAUSED:
+                isPaused = true;
+                menuPause.setVisible(isPaused);
+                break;
+            case IN_PROGRESS:
+                isPaused = false;
+                menuPause.setVisible(isPaused);
+                break;
+            case GAME_OVER:
+                // Show "You won/lost" message and go back to the main menu
+                break;
+            case OPPONENT_QUIT:
+                System.out.println("Opponent ragequit");
+                // show main menu
+                break;
+            default: throw new RuntimeException("lolwut");
+
+        }
+    }
+
+    private void pollEventBus() {
+        IGameEvent event = Main.eventBus.popIncoming();
+        if (null == event) {
+            return;
+        }
+
+        if (event instanceof PlayerKeyDownEvent) {
+            // Move enemy pad up or down depending on the value of ((PlayerKeyDown) event).action
+        }
+        else if (event instanceof PlayerKeyUpEvent) {
+            // Stop enemy pad movement, regardless of direction
+        }
+        else if (event instanceof GameStateChangeEvent) {
+            handleGameStateChange(((GameStateChangeEvent) event).newState);
+        }
+        else if (event instanceof ConnectionLostEvent) {
+            System.out.println("The connection to the opponent was lost");
+            // Go back to the main menu
+        }
+    }
+
     private void updater(long l) {
         long deltaT = (l - prevTime) / 1000_000;    // Convert to ms
         prevTime = l;
@@ -91,6 +136,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             ball.update(deltaT, player.getBoundingBox(), other.getBoundingBox());
         }
 
+        pollEventBus();
         drawer();
     }
 
@@ -115,6 +161,8 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 case ESCAPE:
                     isPaused = !isPaused;
                     menuPause.setVisible(isPaused);
+                    GameState gs = isPaused ? GameState.PAUSED : GameState.IN_PROGRESS;
+                    Main.eventBus.pushOutgoing(new GameStateChangeEvent(gs));
                     break;
                 case SPACE:
                     if (!isStarted) {
@@ -131,12 +179,14 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     @FXML
     void actionExit(ActionEvent event) {
+        Main.eventBus.pushOutgoing(new GameStateChangeEvent(GameState.OPPONENT_QUIT));
         Main.switchScene("mainmenu.fxml");
     }
 
     @FXML
     void actionResume(ActionEvent event) {
         isPaused = false;
+        Main.eventBus.pushOutgoing(new GameStateChangeEvent(GameState.IN_PROGRESS));
         menuPause.setVisible(false);
     }
 

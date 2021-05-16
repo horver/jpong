@@ -14,28 +14,28 @@ public class EventBus {
         this._outgoing = new LinkedBlockingQueue<IGameEvent>(MAX_QUEUE_EVENTS);
     }
 
-    void pushOutgoing(IGameEvent event) {
+    public void pushOutgoing(IGameEvent event) {
         this._outgoing.add(event);
     }
 
-    void pushIncoming(IGameEvent event) {
+    public void pushIncoming(IGameEvent event) {
         this._incoming.add(event);
     }
 
-    IGameEvent popIncoming() {
+    public IGameEvent popIncoming() {
         return this._incoming.poll();
     }
 
-    IGameEvent popIncomingBlocking() throws InterruptedException {
+    public IGameEvent popIncomingBlocking() throws InterruptedException {
         return this._incoming.take();
     }
 
-    IGameEvent popOutgoing() {
+    public IGameEvent popOutgoing() {
         return this._outgoing.poll();
 
     }
 
-    IGameEvent popOutgoingBlocking() throws InterruptedException {
+    public IGameEvent popOutgoingBlocking() throws InterruptedException {
         return this._outgoing.take();
     }
 }

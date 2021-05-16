@@ -1,23 +1,25 @@
 package bme.pong.networking.gameevents;
 
+import bme.pong.entities.MoveAction;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class PlayerKeyUpEvent implements IGameEvent, Serializable {
-    public int keyCode;
+    public MoveAction action;
 
-    public PlayerKeyUpEvent(int key) {
-        keyCode = key;
+    public PlayerKeyUpEvent(MoveAction act) {
+        action = act;
     }
 
-    public String getName() { return "Player key up event with keycode: " + Integer.toString(keyCode); }
+    public String getName() { return "Player key up event with keycode: " + action.name(); }
 
     public void writeObject(ObjectOutputStream oos) throws IOException {
-        oos.writeInt(keyCode);
+        oos.writeObject(action);
     }
-    public void readObject(ObjectInputStream ois) throws IOException {
-        keyCode = ois.readInt();
+    public void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        action = (MoveAction) ois.readObject();
     }
 }
