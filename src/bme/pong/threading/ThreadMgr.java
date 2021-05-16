@@ -3,7 +3,7 @@ package bme.pong.threading;
 import java.util.ArrayList;
 
 public class ThreadMgr {
-    private ArrayList<Thread> _threads;
+    private final ArrayList<Thread> _threads;
 
     public ThreadMgr() {
         _threads = new ArrayList<>();
@@ -18,7 +18,7 @@ public class ThreadMgr {
 
     public void nukeThread(String threadName) {
         for (Thread it : _threads) {
-            if (it.getName() == threadName) {
+            if (it.getName().equals(threadName)) {
                 it.interrupt();
                 _threads.remove(it);
                 return;

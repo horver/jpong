@@ -18,10 +18,17 @@ public class Ball extends GameObject {
 
     public Ball(int x, int y) {
         super(x, y);
-        randomDirection();
     }
 
-    private void randomDirection() {
+    public Point2D getDirection() {
+        return velocity;
+    }
+
+    public void setDirection(Point2D vec) {
+        velocity = vec;
+    }
+
+    public void setRandomDirection() {
         velocity = new Point2D(-1 + Math.random() * 2, -1 + Math.random() * 2).normalize();
 
         // Handling edge cases: zero velocity, or only mostly one directional velocity
@@ -33,12 +40,11 @@ public class Ball extends GameObject {
         ) {
             velocity = new Point2D(0.5, 0.5).normalize();
         }
-
     }
 
     @Override
     public void restart() {
-        randomDirection();
+        //randomDirection();
         super.restart();
     }
 

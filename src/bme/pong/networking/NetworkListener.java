@@ -6,8 +6,6 @@ import java.util.logging.Logger;
 import java.net.*;
 
 import bme.pong.networking.gameevents.*;
-import bme.pong.threading.AbortException;
-import bme.pong.threading.AbortInterface;
 import bme.pong.threading.ThreadMgr;
 
 public class NetworkListener implements Runnable {
