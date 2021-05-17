@@ -36,6 +36,21 @@ public class ScoreManager implements OnScoreListener {
         }
     }
 
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+        if (onStatisticsListener != null) {
+            onStatisticsListener.onNameTextChange(getPlayerText());
+        }
+    }
+
+    public String getOtherName() {
+        return otherName;
+    }
+
     public boolean saveState() {
         Format c = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
         File file = new File(playerName + " vs " + otherName + " " + c.format(new Date()) + ".state");
@@ -85,6 +100,19 @@ public class ScoreManager implements OnScoreListener {
     private void scoreChanged() {
         if (onStatisticsListener != null) {
             onStatisticsListener.onScoreTextChange(playerScore + " : " + otherScore);
+        }
+    }
+
+    public boolean checkWin() {
+        return (Main.propertyStorage.getTargetGoal() <= playerScore ||
+                Main.propertyStorage.getTargetGoal() <= otherScore);
+    }
+
+    public String getWinner() {
+        if (playerScore > otherScore) {
+            return playerName;
+        } else {
+            return otherName;
         }
     }
 }

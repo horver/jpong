@@ -112,28 +112,31 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 menuPause.setVisible(isPaused);
                 break;
             case GAME_OVER:
-                // Show "You won/lost" message and go back to the main menu
+                resetFlags();
+                String winner = scoreManager.getWinner();
+                new Alert(Alert.AlertType.INFORMATION, "You're winner!" + winner).show();
+                Main.switchScene("mainmenu.fxml");
                 break;
             case OPPONENT_QUIT:
                 logger.info("Opponent ragequit");
-                // show main menu
+                new Alert(Alert.AlertType.ERROR, "Opponent quit!").show();
                 break;
-            default: throw new RuntimeException("lolwut");
+            default:
+                throw new RuntimeException("lolwut");
         }
     }
 
-    private void handleConnectionEstablished(ConnectionEstablishedEvent event) {
-        if (Main.propertyStorage.isClient()) {
-            // my name is: event.guestName
-            // opponent name is: event.hostName
-        }
-        else {
-            // my name is: event.hostName
-            // opponent name is: event.guestName
+    private void resetFlags() {
+        isStarted = false;
+        playerReady = false;
+        opponentReady = false;
+    }
 
-            // Send ball initial direction vector to the guest
-            Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
-        }
+    private void handleConnectionEstablished(ConnectionEstablishedEvent event) {
+        scoreManager.setOtherName(event.getHostName());
+        scoreManager.setPlayerName(event.getGuestName());
+        // Send ball initial direction vector to the guest
+        Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
     }
 
     private void pollEventBus() {
@@ -154,12 +157,10 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             // display a message that opponent is ready to start the game
             isStarted = playerReady;
             logger.info("Opponent is ready, waiting for you");
-        }
-        else if (event instanceof BallDirectionChangeEvent) {
+        } else if (event instanceof BallDirectionChangeEvent) {
             ghostBall.setDirection(((BallDirectionChangeEvent) event).getPoint());
         } else if (event instanceof OnScoreEvent) {
             resetGame();
-            isStarted = false;
             txtStatus.setVisible(true);
             scoreManager.onScore(((OnScoreEvent) event).getScoringSide());
         } else if (event instanceof PlayerMoveActionEvent) {
@@ -194,8 +195,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     private void resetGame() {
         gameObjects.forEach(GameObject::restart);
-        playerReady = false;
-        opponentReady = false;
+        resetFlags();
         txtStatus.setVisible(false);
     }
 
@@ -267,10 +267,13 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     @Override
     public void onScore(ScoringSide side) {
-        Main.eventBus.pushOutgoing(new OnScoreEvent(side));
-        resetGame();
-        isStarted = false;
-        txtStatus.setVisible(true);
+        if (scoreManager.checkWin()) {
+            Main.eventBus.pushOutgoing(new GameStateChangeEvent(GameState.GAME_OVER));
+        } else {
+            Main.eventBus.pushOutgoing(new OnScoreEvent(side));
+            resetGame();
+            txtStatus.setVisible(true);
+        }
     }
 
     @Override
