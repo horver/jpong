@@ -146,7 +146,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             handleGameStateChange(((GameStateChangeEvent) event).newState);
         } else if (event instanceof ConnectionLostEvent) {
             logger.info("The connection to the opponent was lost");
-            // Go back to the main menu
+            new Alert(Alert.AlertType.ERROR, "Connection lost!").show();
         } else if (event instanceof ConnectionEstablishedEvent) {
             handleConnectionEstablished((ConnectionEstablishedEvent) event);
         } else if (event instanceof PlayerReadyEvent) {

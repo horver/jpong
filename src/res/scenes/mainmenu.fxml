@@ -6,8 +6,8 @@
       prefHeight="480.0" prefWidth="640.0" spacing="50.0" styleClass="menu-container" stylesheets="@../styles/game.css"
       xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="bme.pong.controllers.MainMenuController">
-   <Button mnemonicParsing="false" onAction="#actionNewGame" styleClass="button-menu" stylesheets="@../styles/game.css"
-           text="New game"/>
-   <Button mnemonicParsing="false" text="Highscores"/>
-   <Button mnemonicParsing="false" onAction="#actionExit" styleClass="button-menu" text="Exit"/>
+    <Button mnemonicParsing="false" onAction="#actionNewGame" styleClass="button-menu" stylesheets="@../styles/game.css"
+            text="New game"/>
+    <Button mnemonicParsing="false" text="Highscores" visible="false"/>
+    <Button mnemonicParsing="false" onAction="#actionExit" styleClass="button-menu" text="Exit"/>
 </VBox>
