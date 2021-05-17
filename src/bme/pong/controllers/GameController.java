@@ -142,25 +142,14 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             return;
         }
 
-        if (event instanceof PlayerKeyDownEvent) {
-            // Move enemy pad up or down depending on the value of ((PlayerKeyDown) event).action
-//            opponent.setMoveAction(((PlayerKeyDownEvent) event).action);
-        }
-        else if (event instanceof PlayerKeyUpEvent) {
-            // Stop enemy pad movement, regardless of direction
-//            opponent.setMoveAction(((PlayerKeyUpEvent) event).action);
-        }
-        else if (event instanceof GameStateChangeEvent) {
+        if (event instanceof GameStateChangeEvent) {
             handleGameStateChange(((GameStateChangeEvent) event).newState);
-        }
-        else if (event instanceof ConnectionLostEvent) {
+        } else if (event instanceof ConnectionLostEvent) {
             logger.info("The connection to the opponent was lost");
             // Go back to the main menu
-        }
-        else if (event instanceof ConnectionEstablishedEvent) {
+        } else if (event instanceof ConnectionEstablishedEvent) {
             handleConnectionEstablished((ConnectionEstablishedEvent) event);
-        }
-        else if (event instanceof PlayerReadyEvent) {
+        } else if (event instanceof PlayerReadyEvent) {
             opponentReady = true;
             // display a message that opponent is ready to start the game
             isStarted = playerReady;
@@ -172,7 +161,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             resetGame();
             isStarted = false;
             txtStatus.setVisible(true);
-            // TODO: update ScoreManager
+            scoreManager.onScore(((OnScoreEvent) event).getScoringSide());
         } else if (event instanceof PlayerMoveActionEvent) {
             opponent.setMoveAction(((PlayerMoveActionEvent) event).action);
         }
@@ -205,6 +194,8 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     private void resetGame() {
         gameObjects.forEach(GameObject::restart);
+        playerReady = false;
+        opponentReady = false;
         txtStatus.setVisible(false);
     }
 

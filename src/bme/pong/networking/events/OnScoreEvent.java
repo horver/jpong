@@ -14,6 +14,10 @@ public class OnScoreEvent implements IGameEvent, Serializable {
         this.scoringSide = scoringSide;
     }
 
+    public ScoringSide getScoringSide() {
+        return scoringSide;
+    }
+
     @Override
     public String getName() {
         return "Score event";
