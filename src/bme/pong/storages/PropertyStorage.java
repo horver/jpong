@@ -1,9 +1,9 @@
 package bme.pong.storages;
 
-import java.util.logging.Logger;
-
 import bme.pong.utils.IConfigMgr;
 import bme.pong.utils.IniParser;
+
+import java.util.logging.Logger;
 
 public class PropertyStorage {
     private String playerName;
@@ -11,6 +11,7 @@ public class PropertyStorage {
     private int hostPort;
     private boolean isClient;
     private IConfigMgr configParser;
+    private int targetGoal;
     private final Logger logger;
 
     public PropertyStorage(String configPath) {
@@ -58,10 +59,19 @@ public class PropertyStorage {
         isClient = client;
     }
 
+    public int getTargetGoal() {
+        return targetGoal;
+    }
+
+    public void setTargetGoal(int targetGoal) {
+        this.targetGoal = targetGoal;
+    }
+
     public void save(String configPath) {
         this.configParser.setKey("player_name", playerName);
         this.configParser.setKey("host_address", hostAddress);
         this.configParser.setKey("port", Integer.toString(hostPort));
+        this.configParser.setKey("goal", Integer.toString(targetGoal));
         this.configParser.saveToFile(configPath);
     }
 
@@ -70,6 +80,7 @@ public class PropertyStorage {
         hostAddress = "127.0.0.1";
         hostPort = 12345;
         isClient = true;
+        targetGoal = 10;
     }
 
     public void load() {
@@ -77,5 +88,6 @@ public class PropertyStorage {
         hostAddress = configParser.getKey("host_address", "127.0.0.1");
         hostPort = Integer.parseInt(configParser.getKey("port", "12345"));
         isClient = true;
+        targetGoal = Integer.parseInt(configParser.getKey("goal", "10"));
     }
 }

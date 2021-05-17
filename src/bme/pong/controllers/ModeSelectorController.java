@@ -1,9 +1,7 @@
 package bme.pong.controllers;
 
 import bme.pong.Main;
-import bme.pong.threading.AbortInterface;
 import bme.pong.networking.NetworkHandler;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -37,11 +35,16 @@ public class ModeSelectorController {
     private Button btnStartGame;
 
     @FXML
+    private TextField txtGoal;
+
+    @FXML
     void initialize() {
 
         txtPlayerName.setText(Main.propertyStorage.getPlayerName());
         txtAddress.setText(Main.propertyStorage.getHostAddress());
         txtPort.setText(String.valueOf(Main.propertyStorage.getHostPort()));
+        txtGoal.setText(String.valueOf(Main.propertyStorage.getTargetGoal()));
+
         if (Main.propertyStorage.isClient()) {
             selectJoin.setSelected(true);
         } else {
@@ -79,10 +82,17 @@ public class ModeSelectorController {
             Main.propertyStorage.setHostAddress(txtAddress.getText());
         }
         Main.propertyStorage.setClient(isJoinSelected);
+
         try {
             Main.propertyStorage.setHostPort(Integer.parseInt(txtPort.getText()));
         } catch (NumberFormatException e) {
             Main.propertyStorage.setHostPort(12345);
+        }
+
+        try {
+            Main.propertyStorage.setTargetGoal(Integer.parseInt(txtGoal.getText()));
+        } catch (NumberFormatException e) {
+            Main.propertyStorage.setTargetGoal(10);
         }
 
         Main.propertyStorage.save(Main.configPath);
