@@ -1,7 +1,5 @@
 package bme.pong.utils;
 
-import bme.pong.utils.IConfigMgr;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -9,16 +7,16 @@ import java.nio.file.Path;
 import java.util.TreeMap;
 
 public class IniParser implements IConfigMgr {
-    private TreeMap<String, String> _content; // TreeMap is ordered
+    private final TreeMap<String, String> _content; // TreeMap is ordered
 
     public IniParser() {
-        _content = new TreeMap<String, String>();
+        _content = new TreeMap<>();
     }
 
     public IniParser(String ini) {
-        _content = new TreeMap<String, String>();
+        _content = new TreeMap<>();
         String[] iniLines = ini.split("\n");
-        System.out.println("ini lines count: " + Integer.toString(iniLines.length));
+        System.out.println("ini lines count: " + iniLines.length);
         for (String line : iniLines) {
             // ltrim() emulation
             if (line.replaceAll("^\\s+", "").charAt(0) == '[') {
@@ -56,7 +54,7 @@ public class IniParser implements IConfigMgr {
     public String save() {
         StringBuilder builder = new StringBuilder();
         for (String key : _content.keySet()) {
-            builder.append(key + " = " + _content.get(key) + "\n");
+            builder.append(key).append(" = ").append(_content.get(key)).append("\n");
         }
 
         return builder.toString();
@@ -65,7 +63,6 @@ public class IniParser implements IConfigMgr {
     public void saveToFile(String filename) {
         try (PrintWriter writer = new PrintWriter(filename)) {
             writer.print(this.save());
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

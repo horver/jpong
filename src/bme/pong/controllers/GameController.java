@@ -73,8 +73,15 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
         onNameTextChange(scoreManager.getPlayerText());
 
-        player = new Player(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
-        opponent = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        // Side depends on server-client mode
+        if (isClient) {
+            player = new Player(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+            other = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        } else {
+            player = new Player((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+            other = new Pad(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        }
+
         ball = new Ball((int) canvas.getWidth() / 2 - Ball.SIZE / 2, (int) canvas.getHeight() / 2 - Ball.SIZE / 2);
 
         if (!Main.propertyStorage.isClient()) {
