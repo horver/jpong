@@ -1,8 +1,7 @@
 package bme.pong.entities;
 
 import bme.pong.Main;
-import bme.pong.networking.events.PlayerKeyDownEvent;
-import bme.pong.networking.events.PlayerKeyUpEvent;
+import bme.pong.networking.events.PlayerMoveActionEvent;
 import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -12,20 +11,14 @@ import java.util.List;
 
 public class Player extends Pad {
 
-    private MoveAction moveAction = MoveAction.IDLE;
     private final List<KeyCode> keys = new ArrayList<>();
 
     public Player(int x, int y) {
         super(x, y);
     }
 
-    private void sendKeyAction(MoveAction action, EventType<KeyEvent> keyEvtType) {
-        if (keyEvtType == KeyEvent.KEY_PRESSED) {
-            Main.eventBus.pushOutgoing(new PlayerKeyDownEvent(action));
-        }
-        else if (keyEvtType == KeyEvent.KEY_RELEASED) {
-            Main.eventBus.pushOutgoing(new PlayerKeyUpEvent(action));
-        }
+    private void sendKeyAction(MoveAction action) {
+        Main.eventBus.pushOutgoing(new PlayerMoveActionEvent(action));
     }
 
     public void keyHandler(KeyEvent keyEvent) {
@@ -49,19 +42,18 @@ public class Player extends Pad {
 
         if (keys.contains(KeyCode.W) || keys.contains(KeyCode.UP)) {
             moveAction = MoveAction.MOVE_UP;
-            sendKeyAction(moveAction, keyEvent.getEventType());
         }
 
         if (keys.contains(KeyCode.S) || keys.contains(KeyCode.DOWN)) {
             moveAction = MoveAction.MOVE_DOWN;
-            sendKeyAction(moveAction, keyEvent.getEventType());
         }
 
         if (keys.isEmpty() || keys.size() > 2) {
             moveAction = MoveAction.IDLE;
-            sendKeyAction(moveAction, keyEvent.getEventType());
             keys.clear();
         }
+
+        sendKeyAction(this.moveAction);
     }
 
     @Override

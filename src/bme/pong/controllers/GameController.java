@@ -144,11 +144,11 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
         if (event instanceof PlayerKeyDownEvent) {
             // Move enemy pad up or down depending on the value of ((PlayerKeyDown) event).action
-            opponent.setMoveAction(((PlayerKeyDownEvent) event).action);
+//            opponent.setMoveAction(((PlayerKeyDownEvent) event).action);
         }
         else if (event instanceof PlayerKeyUpEvent) {
             // Stop enemy pad movement, regardless of direction
-            opponent.setMoveAction(MoveAction.IDLE);
+//            opponent.setMoveAction(((PlayerKeyUpEvent) event).action);
         }
         else if (event instanceof GameStateChangeEvent) {
             handleGameStateChange(((GameStateChangeEvent) event).newState);
@@ -173,6 +173,8 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             isStarted = false;
             txtStatus.setVisible(true);
             // TODO: update ScoreManager
+        } else if (event instanceof PlayerMoveActionEvent) {
+            opponent.setMoveAction(((PlayerMoveActionEvent) event).action);
         }
     }
 
