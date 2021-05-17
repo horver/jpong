@@ -4,7 +4,9 @@ import bme.pong.Main;
 import bme.pong.entities.*;
 import bme.pong.listeners.OnScoreListener;
 import bme.pong.listeners.OnStatisticsListener;
+import bme.pong.networking.gameevents.*;
 import bme.pong.storages.ScoreManager;
+import bme.pong.entities.GameState;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +22,7 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class GameController implements OnScoreListener, OnStatisticsListener {
 
@@ -41,13 +44,15 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     private AnimationTimer animationTimer;
     private long prevTime;
     private Player player;
-    private Pad other;
+    private Pad opponent;
     private Ball ball;
     private GraphicsContext context;
     private final List<GameObject> gameObjects = new ArrayList<>();
     private boolean isPaused = false;
     private boolean isStarted = false;
+    private boolean playerReady = false, opponentReady = false;
     private final ScoreManager scoreManager = new ScoreManager();
+    private final Logger logger;
 
     public GameController() {
         prevTime = System.nanoTime();
@@ -58,6 +63,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 updater(l);
             }
         };
+        logger = Logger.getLogger(this.getClass().getName());
     }
 
     @FXML
@@ -69,16 +75,90 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         onNameTextChange(scoreManager.getPlayerText());
 
         player = new Player(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
-        other = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+        opponent = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
         ball = new Ball((int) canvas.getWidth() / 2 - Ball.SIZE / 2, (int) canvas.getHeight() / 2 - Ball.SIZE / 2);
 
+        if (!Main.propertyStorage.isClient()) {
+            ball.setRandomDirection();
+        }
+
         gameObjects.add(player);
-        gameObjects.add(other);
+        gameObjects.add(opponent);
         gameObjects.add(ball);
 
         ball.addOnScoreListener(this);
         ball.addOnScoreListener(scoreManager);
         animationTimer.start();
+    }
+
+    private void handleGameStateChange(GameState gs) {
+        switch (gs) {
+            case PAUSED:
+                isPaused = true;
+                menuPause.setVisible(isPaused);
+                break;
+            case IN_PROGRESS:
+                isPaused = false;
+                menuPause.setVisible(isPaused);
+                break;
+            case GAME_OVER:
+                // Show "You won/lost" message and go back to the main menu
+                break;
+            case OPPONENT_QUIT:
+                logger.info("Opponent ragequit");
+                // show main menu
+                break;
+            default: throw new RuntimeException("lolwut");
+        }
+    }
+
+    private void handleConnectionEstablished(ConnectionEstablishedEvent event) {
+        if (Main.propertyStorage.isClient()) {
+            // my name is: event.guestName
+            // opponent name is: event.hostName
+        }
+        else {
+            // my name is: event.hostName
+            // opponent name is: event.guestName
+
+            // Send ball initial direction vector to the guest
+            Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
+        }
+    }
+
+    private void pollEventBus() {
+        IGameEvent event = Main.eventBus.popIncoming();
+        if (null == event) {
+            return;
+        }
+
+        if (event instanceof PlayerKeyDownEvent) {
+            // Move enemy pad up or down depending on the value of ((PlayerKeyDown) event).action
+            opponent.setMoveAction(((PlayerKeyDownEvent) event).action);
+        }
+        else if (event instanceof PlayerKeyUpEvent) {
+            // Stop enemy pad movement, regardless of direction
+            opponent.setMoveAction(MoveAction.IDLE);
+        }
+        else if (event instanceof GameStateChangeEvent) {
+            handleGameStateChange(((GameStateChangeEvent) event).newState);
+        }
+        else if (event instanceof ConnectionLostEvent) {
+            logger.info("The connection to the opponent was lost");
+            // Go back to the main menu
+        }
+        else if (event instanceof ConnectionEstablishedEvent) {
+            handleConnectionEstablished((ConnectionEstablishedEvent) event);
+        }
+        else if (event instanceof PlayerReadyEvent) {
+            opponentReady = true;
+            // display a message that opponent is ready to start the game
+            isStarted = playerReady;
+            logger.info("Opponent is ready, waiting for you");
+        }
+        else if (event instanceof BallDirectionChangeEvent) {
+            ball.setDirection(((BallDirectionChangeEvent) event).getPoint());
+        }
     }
 
     private void updater(long l) {
@@ -87,10 +167,11 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
         if (!isPaused && isStarted) {
             player.update(deltaT);
-            other.update(deltaT);
-            ball.update(deltaT, player.getBoundingBox(), other.getBoundingBox());
+            opponent.update(deltaT);
+            ball.update(deltaT, player.getBoundingBox(), opponent.getBoundingBox());
         }
 
+        pollEventBus();
         drawer();
     }
 
@@ -104,6 +185,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     private void resetGame() {
         gameObjects.forEach(GameObject::restart);
         txtStatus.setVisible(false);
+        Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
     }
 
     @FXML
@@ -115,12 +197,18 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 case ESCAPE:
                     isPaused = !isPaused;
                     menuPause.setVisible(isPaused);
+                    GameState gs = isPaused ? GameState.PAUSED : GameState.IN_PROGRESS;
+                    Main.eventBus.pushOutgoing(new GameStateChangeEvent(gs));
                     break;
                 case SPACE:
                     if (!isStarted) {
                         txtStatus.setVisible(false);
                     }
-                    isStarted = true;
+                    Main.eventBus.pushOutgoing(new PlayerReadyEvent());
+                    playerReady = true;
+                    // display a message that you are ready to start the game
+                    isStarted = opponentReady;
+                    logger.info("Ready to start the game, waiting for the opponent");
                     break;
                 case F7:
                     scoreManager.saveState();
@@ -131,12 +219,14 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     @FXML
     void actionExit(ActionEvent event) {
+        Main.eventBus.pushOutgoing(new GameStateChangeEvent(GameState.OPPONENT_QUIT));
         Main.switchScene("mainmenu.fxml");
     }
 
     @FXML
     void actionResume(ActionEvent event) {
         isPaused = false;
+        Main.eventBus.pushOutgoing(new GameStateChangeEvent(GameState.IN_PROGRESS));
         menuPause.setVisible(false);
     }
 
