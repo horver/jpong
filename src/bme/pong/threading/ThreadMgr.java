@@ -28,7 +28,7 @@ public class ThreadMgr {
 
     public void nukeAll() {
         for (Thread t : _threads) {
-            System.out.println("Nuking thread: " + t.getName());
+//            System.out.println("Nuking thread: " + t.getName());
             t.interrupt();
         }
         //_threads.stream().forEach(t -> t.interrupt());

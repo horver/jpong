@@ -16,7 +16,7 @@ public class IniParser implements IConfigMgr {
     public IniParser(String ini) {
         _content = new TreeMap<>();
         String[] iniLines = ini.split("\n");
-        System.out.println("ini lines count: " + iniLines.length);
+//        System.out.println("ini lines count: " + iniLines.length);
         for (String line : iniLines) {
             // ltrim() emulation
             if (line.replaceAll("^\\s+", "").charAt(0) == '[') {

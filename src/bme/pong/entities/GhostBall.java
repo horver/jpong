@@ -21,7 +21,6 @@ public class GhostBall extends GameObject {
 
     @Override
     public void restart() {
-        System.out.println("Ghost reset");
         super.restart();
     }
 
