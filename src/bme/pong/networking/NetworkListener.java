@@ -1,12 +1,13 @@
 package bme.pong.networking;
 
+import bme.pong.networking.events.ConnectionRequestEvent;
+import bme.pong.networking.events.IGameEvent;
+import bme.pong.threading.ThreadMgr;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.Socket;
 import java.util.logging.Logger;
-import java.net.*;
-
-import bme.pong.networking.gameevents.*;
-import bme.pong.threading.ThreadMgr;
 
 public class NetworkListener implements Runnable {
 

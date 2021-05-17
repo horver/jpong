@@ -1,8 +1,8 @@
 package bme.pong.entities;
 
 import bme.pong.Main;
-import bme.pong.networking.gameevents.PlayerKeyDownEvent;
-import bme.pong.networking.gameevents.PlayerKeyUpEvent;
+import bme.pong.networking.events.PlayerKeyDownEvent;
+import bme.pong.networking.events.PlayerKeyUpEvent;
 import javafx.event.EventType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;

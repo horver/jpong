@@ -4,7 +4,7 @@ import bme.pong.Main;
 import bme.pong.entities.*;
 import bme.pong.listeners.OnScoreListener;
 import bme.pong.listeners.OnStatisticsListener;
-import bme.pong.networking.gameevents.*;
+import bme.pong.networking.events.*;
 import bme.pong.storages.ScoreManager;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
@@ -45,6 +45,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     private Player player;
     private Pad opponent;
     private Ball ball;
+    private GhostBall ghostBall;
     private GraphicsContext context;
     private final List<GameObject> gameObjects = new ArrayList<>();
     private boolean isPaused = false;
@@ -77,23 +78,26 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         if (Main.propertyStorage.isClient()) {
             player = new Player(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
             opponent = new Pad((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+            ghostBall = new GhostBall((int) canvas.getWidth() / 2 - Ball.SIZE / 2, (int) canvas.getHeight() / 2 - Ball.SIZE / 2);
         } else {
             player = new Player((int) (canvas.getWidth() - Pad.WIDTH), (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
             opponent = new Pad(0, (int) canvas.getHeight() / 2 - Pad.HEIGHT / 2);
+            ball = new Ball((int) canvas.getWidth() / 2 - Ball.SIZE / 2, (int) canvas.getHeight() / 2 - Ball.SIZE / 2);
         }
-
-        ball = new Ball((int) canvas.getWidth() / 2 - Ball.SIZE / 2, (int) canvas.getHeight() / 2 - Ball.SIZE / 2);
 
         if (!Main.propertyStorage.isClient()) {
             ball.setRandomDirection();
+            ball.addOnScoreListener(this);
+            ball.addOnScoreListener(scoreManager);
+            gameObjects.add(ball);
+        } else {
+            gameObjects.add(ghostBall);
+            logger.info("ghostBall added");
         }
 
         gameObjects.add(player);
         gameObjects.add(opponent);
-        gameObjects.add(ball);
 
-        ball.addOnScoreListener(this);
-        ball.addOnScoreListener(scoreManager);
         animationTimer.start();
     }
 
@@ -163,7 +167,12 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             logger.info("Opponent is ready, waiting for you");
         }
         else if (event instanceof BallDirectionChangeEvent) {
-            ball.setDirection(((BallDirectionChangeEvent) event).getPoint());
+            ghostBall.setDirection(((BallDirectionChangeEvent) event).getPoint());
+        } else if (event instanceof OnScoreEvent) {
+            resetGame();
+            isStarted = false;
+            txtStatus.setVisible(true);
+            // TODO: update ScoreManager
         }
     }
 
@@ -174,7 +183,11 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         if (!isPaused && isStarted) {
             player.update(deltaT);
             opponent.update(deltaT);
-            ball.update(deltaT, player.getBoundingBox(), opponent.getBoundingBox());
+            if (Main.propertyStorage.isClient()) {
+                ghostBall.update(deltaT);
+            } else {
+                ball.update(deltaT, player.getBoundingBox(), opponent.getBoundingBox());
+            }
         }
 
         pollEventBus();
@@ -191,7 +204,6 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     private void resetGame() {
         gameObjects.forEach(GameObject::restart);
         txtStatus.setVisible(false);
-        Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
     }
 
     @FXML
@@ -262,6 +274,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
 
     @Override
     public void onScore(ScoringSide side) {
+        Main.eventBus.pushOutgoing(new OnScoreEvent(side));
         resetGame();
         isStarted = false;
         txtStatus.setVisible(true);

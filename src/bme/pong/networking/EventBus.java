@@ -1,8 +1,8 @@
 package bme.pong.networking;
 
-import java.util.concurrent.LinkedBlockingQueue;
+import bme.pong.networking.events.IGameEvent;
 
-import bme.pong.networking.gameevents.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class EventBus {
     final int MAX_QUEUE_EVENTS = 10;
@@ -10,8 +10,8 @@ public class EventBus {
     private LinkedBlockingQueue<IGameEvent> _outgoing; // Events to be sent to the opponent
 
     public EventBus() {
-        this._incoming = new LinkedBlockingQueue<IGameEvent>(MAX_QUEUE_EVENTS);
-        this._outgoing = new LinkedBlockingQueue<IGameEvent>(MAX_QUEUE_EVENTS);
+        this._incoming = new LinkedBlockingQueue<>(MAX_QUEUE_EVENTS);
+        this._outgoing = new LinkedBlockingQueue<>(MAX_QUEUE_EVENTS);
     }
 
     public void pushOutgoing(IGameEvent event) {

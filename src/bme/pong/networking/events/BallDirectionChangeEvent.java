@@ -1,4 +1,4 @@
-package bme.pong.networking.gameevents;
+package bme.pong.networking.events;
 
 import javafx.geometry.Point2D;
 
@@ -24,14 +24,16 @@ public class BallDirectionChangeEvent implements IGameEvent, Serializable {
         return new Point2D(X, Y);
     }
 
-    public void writeObject(ObjectOutputStream oos) throws IOException {
+    @Override
+    public void writeObject(ObjectOutputStream outputStream) throws IOException {
         // oos.writeObject(velocity) apparently doesn't work
-        oos.writeDouble(X);
-        oos.writeDouble(Y);
+        outputStream.writeDouble(X);
+        outputStream.writeDouble(Y);
     }
 
-    public void readObject(ObjectInputStream ois) throws IOException {
-        X = ois.readDouble();
-        Y = ois.readDouble();
+    @Override
+    public void readObject(ObjectInputStream inputStream) throws IOException {
+        X = inputStream.readDouble();
+        Y = inputStream.readDouble();
     }
 }

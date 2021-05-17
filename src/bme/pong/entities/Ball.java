@@ -1,6 +1,8 @@
 package bme.pong.entities;
 
+import bme.pong.Main;
 import bme.pong.listeners.OnScoreListener;
+import bme.pong.networking.events.BallDirectionChangeEvent;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,10 +26,6 @@ public class Ball extends GameObject {
         return velocity;
     }
 
-    public void setDirection(Point2D vec) {
-        velocity = vec;
-    }
-
     public void setRandomDirection() {
         velocity = new Point2D(-1 + Math.random() * 2, -1 + Math.random() * 2).normalize();
 
@@ -44,7 +42,7 @@ public class Ball extends GameObject {
 
     @Override
     public void restart() {
-        //randomDirection();
+        //setRandomDirection();
         super.restart();
     }
 
@@ -59,14 +57,18 @@ public class Ball extends GameObject {
 
         if (playerBoundingBox.intersects(boundingBox) || otherBoundingBox.intersects(boundingBox)) {
             velocity = new Point2D(-velocity.getX(), velocity.getY());
+            Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(velocity));
         }
 
         if (position.getY() < 0 || position.getY() > 480 - SIZE) {
             velocity = new Point2D(velocity.getX(), -velocity.getY());
+            Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(velocity));
+
         }
 
         if (position.getX() < 0 || position.getX() > 640 - SIZE) {
-            velocity = new Point2D(-velocity.getX(), velocity.getY());
+            velocity = new Point2D(-velocity.getX(), velocity.getY()); // TODO: needed?
+            Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(velocity)); // TODO: needed?
             ScoringSide side = position.getX() < 0 ? ScoringSide.PLAYER_SIDE : ScoringSide.OTHER_SIDE;
             for (OnScoreListener listener : listeners) {
                 listener.onScore(side);

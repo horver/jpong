@@ -1,13 +1,17 @@
 package bme.pong.networking;
 
+import bme.pong.networking.events.ConnectionEstablishedEvent;
+import bme.pong.networking.events.ConnectionLostEvent;
+import bme.pong.networking.events.ConnectionRequestEvent;
+import bme.pong.networking.events.IGameEvent;
 import bme.pong.storages.PropertyStorage;
-import bme.pong.networking.gameevents.*;
 import bme.pong.threading.ThreadMgr;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 import java.io.ObjectOutputStream;
-import java.net.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Logger;
 
 public class NetworkHandler implements Runnable {
     public enum NetworkRole {
@@ -73,7 +77,7 @@ public class NetworkHandler implements Runnable {
         _oos = new ObjectOutputStream(_sock.getOutputStream());
         ConnectionRequestEvent connReq = new ConnectionRequestEvent(_playerName);
         _logger.info("Sending connection request event");
-        sendEvent((IGameEvent) connReq);
+        sendEvent(connReq);
         initListeners();
     }
 
@@ -120,7 +124,7 @@ public class NetworkHandler implements Runnable {
 
     private void handleConnectionRequest(ConnectionRequestEvent req) throws IOException {
         ConnectionEstablishedEvent respEvent = new ConnectionEstablishedEvent(req.guestName, this._playerName);
-        sendEvent((IGameEvent) respEvent);
-        _bus.pushIncoming((IGameEvent) respEvent);
+        sendEvent(respEvent);
+        _bus.pushIncoming(respEvent);
     }
 }
