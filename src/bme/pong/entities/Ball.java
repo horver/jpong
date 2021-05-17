@@ -74,7 +74,6 @@ public class Ball extends GameObject {
         }
 
         position = position.add(velocity.multiply(deltaT * SPEED).normalize());
-        super.update(deltaT);
     }
 
     public void addOnScoreListener(OnScoreListener listener) {

@@ -11,7 +11,6 @@ public class Pad extends GameObject {
     public static final int HEIGHT = 64;
     public static final double SPEED = 0.7;
     protected MoveAction moveAction = MoveAction.IDLE;
-    protected int keyCounter = 0;
 
     public Pad(int x, int y) {
         super(x, y);
@@ -32,7 +31,6 @@ public class Pad extends GameObject {
         this.moveAction = ma;
     }
 
-    @Override
     public void update(long deltaT) {
         switch (moveAction) {
             case MOVE_UP:
@@ -48,14 +46,11 @@ public class Pad extends GameObject {
                 }
                 break;
         }
-        //System.out.println(keyCounter);
-        super.update(deltaT);
     }
 
     @Override
     public void restart() {
         moveAction = MoveAction.IDLE;
-        keyCounter = 0;
         super.restart();
     }
 }

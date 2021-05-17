@@ -6,7 +6,6 @@ import bme.pong.listeners.OnScoreListener;
 import bme.pong.listeners.OnStatisticsListener;
 import bme.pong.networking.gameevents.*;
 import bme.pong.storages.ScoreManager;
-import bme.pong.entities.GameState;
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,7 +40,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     @FXML
     private VBox menuPause;
 
-    private AnimationTimer animationTimer;
+    private final AnimationTimer animationTimer;
     private long prevTime;
     private Player player;
     private Pad opponent;
@@ -91,8 +90,8 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         animationTimer.start();
     }
 
-    private void handleGameStateChange(GameState gs) {
-        switch (gs) {
+    private void handleGameStateChange(GameState gameState) {
+        switch (gameState) {
             case PAUSED:
                 isPaused = true;
                 menuPause.setVisible(isPaused);

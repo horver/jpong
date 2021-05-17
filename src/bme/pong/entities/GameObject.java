@@ -21,10 +21,6 @@ public abstract class GameObject {
         return position;
     }
 
-    public void update(long deltaT) {
-        // TODO: Add Sockets
-    }
-
     public void restart() {
         position = startPos;
     }
