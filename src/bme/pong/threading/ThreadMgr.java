@@ -9,8 +9,11 @@ public class ThreadMgr {
         _threads = new ArrayList<>();
     }
 
-    public void startThread(Runnable target, String threadName) {
+    public void startThread(Runnable target, String threadName, Thread.UncaughtExceptionHandler exceptionHandler) {
         Thread t = new Thread(target, threadName);
+        if (null != exceptionHandler) {
+            t.setUncaughtExceptionHandler(exceptionHandler);
+        }
         _threads.add(t);
 
         t.start();
@@ -32,5 +35,13 @@ public class ThreadMgr {
             t.interrupt();
         }
         //_threads.stream().forEach(t -> t.interrupt());
+    }
+
+    public void handleException(String threadName, Throwable throwable) {
+        for (Thread t : _threads) {
+            if (t.getName().equals(threadName)) {
+                t.getUncaughtExceptionHandler().uncaughtException(t, throwable);
+            }
+        }
     }
 }

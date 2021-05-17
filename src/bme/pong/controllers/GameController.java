@@ -137,7 +137,9 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         scoreManager.setOtherName(event.getHostName());
         scoreManager.setPlayerName(event.getGuestName());
         // Send ball initial direction vector to the guest
-        Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
+        if (!Main.propertyStorage.isClient()) {
+            Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
+        }
     }
 
     private void pollEventBus() {

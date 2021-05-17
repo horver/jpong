@@ -1,6 +1,5 @@
 package bme.pong;
 
-import bme.pong.threading.AbortHandler;
 import bme.pong.networking.EventBus;
 import bme.pong.storages.PropertyStorage;
 import bme.pong.threading.ThreadMgr;
@@ -8,6 +7,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -54,6 +54,10 @@ public class Main extends Application {
             return;
         }
         stage.setScene(new Scene(root, 640, 480));
+    }
+
+    public static void connectionErrorHandler() {
+        new Alert(Alert.AlertType.ERROR, "Connection error!").show();
     }
 
     public static void main(String[] args) {

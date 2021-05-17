@@ -26,7 +26,7 @@ public class NetworkListener implements Runnable {
     }
 
     public void detach() {
-        _threadManager.startThread(this, "Socket listener");
+        _threadManager.startThread(this, "Socket listener", null);
     }
 
     @Override

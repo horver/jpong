@@ -41,10 +41,6 @@ public class NetworkHandler implements Runnable {
         this._threadManager = tmgr;
     }
 
-    public void detach() {
-        _threadManager.startThread(this, "NetworkHandler");
-    }
-
     public void setNetworkRole(NetworkRole role) {
         _role = role;
     }
@@ -61,6 +57,7 @@ public class NetworkHandler implements Runnable {
         }
         catch (Exception ex) {
             ex.printStackTrace();
+            _threadManager.handleException("NetworkHandler", ex);
         }
     }
 
@@ -72,7 +69,7 @@ public class NetworkHandler implements Runnable {
         initListeners();
     }
 
-    private void setGuest() throws IOException {
+    private void setGuest() throws IOException, IllegalArgumentException {
         _logger.info("I'm a guest");
         _sock = new Socket(_host, _port);
         _oos = new ObjectOutputStream(_sock.getOutputStream());
