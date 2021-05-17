@@ -42,7 +42,7 @@ public class Ball extends GameObject {
 
     @Override
     public void restart() {
-        //setRandomDirection();
+        setRandomDirection();
         super.restart();
     }
 

@@ -64,7 +64,7 @@ public class PropertyStorage {
     }
 
     public void setTargetGoal(int targetGoal) {
-        this.targetGoal = targetGoal;
+        this.targetGoal = Math.min(Math.max(2, targetGoal), 100);
     }
 
     public void save(String configPath) {

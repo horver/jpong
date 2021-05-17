@@ -1,5 +1,6 @@
 package bme.pong.networking;
 
+import bme.pong.Main;
 import bme.pong.networking.events.ConnectionEstablishedEvent;
 import bme.pong.networking.events.ConnectionLostEvent;
 import bme.pong.networking.events.ConnectionRequestEvent;
@@ -123,7 +124,7 @@ public class NetworkHandler implements Runnable {
     }
 
     private void handleConnectionRequest(ConnectionRequestEvent req) throws IOException {
-        ConnectionEstablishedEvent respEvent = new ConnectionEstablishedEvent(req.guestName, this._playerName);
+        ConnectionEstablishedEvent respEvent = new ConnectionEstablishedEvent(req.guestName, this._playerName, Main.propertyStorage.getTargetGoal());
         sendEvent(respEvent);
         _bus.pushIncoming(respEvent);
     }

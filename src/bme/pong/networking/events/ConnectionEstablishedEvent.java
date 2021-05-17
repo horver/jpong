@@ -8,10 +8,12 @@ import java.io.Serializable;
 public class ConnectionEstablishedEvent implements IGameEvent, Serializable {
     private String guestName;
     private String hostName;
+    private int targetGoal;
 
-    public ConnectionEstablishedEvent(String guestPlayerName, String hostPlayerName) {
+    public ConnectionEstablishedEvent(String guestPlayerName, String hostPlayerName, int targetGoal) {
         guestName = guestPlayerName;
         hostName = hostPlayerName;
+        this.targetGoal = targetGoal;
     }
 
     public String getName() {
@@ -32,6 +34,14 @@ public class ConnectionEstablishedEvent implements IGameEvent, Serializable {
 
     public void setHostName(String hostName) {
         this.hostName = hostName;
+    }
+
+    public int getTargetGoal() {
+        return targetGoal;
+    }
+
+    public void setTargetGoal(int targetGoal) {
+        this.targetGoal = targetGoal;
     }
 
     @Override

@@ -51,6 +51,24 @@ public class ScoreManager implements OnScoreListener {
         return otherName;
     }
 
+    public int getPlayerScore() {
+        return playerScore;
+    }
+
+    public void setPlayerScore(int playerScore) {
+        this.playerScore = playerScore;
+        scoreChanged();
+    }
+
+    public int getOtherScore() {
+        return otherScore;
+    }
+
+    public void setOtherScore(int otherScore) {
+        this.otherScore = otherScore;
+        scoreChanged();
+    }
+
     public boolean saveState() {
         Format c = new SimpleDateFormat("yyyy-MM-dd_hh:mm:ss");
         File file = new File(playerName + " vs " + otherName + " " + c.format(new Date()) + ".state");
