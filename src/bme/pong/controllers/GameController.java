@@ -269,6 +269,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
     public void onScore(ScoringSide side) {
         if (scoreManager.checkWin()) {
             Main.eventBus.pushOutgoing(new GameStateChangeEvent(GameState.GAME_OVER));
+            handleGameStateChange(GameState.GAME_OVER);
         } else {
             Main.eventBus.pushOutgoing(new OnScoreEvent(side));
             resetGame();

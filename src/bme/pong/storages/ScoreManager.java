@@ -104,8 +104,8 @@ public class ScoreManager implements OnScoreListener {
     }
 
     public boolean checkWin() {
-        return (Main.propertyStorage.getTargetGoal() <= playerScore ||
-                Main.propertyStorage.getTargetGoal() <= otherScore);
+        return (Main.propertyStorage.getTargetGoal() - 1 == playerScore ||
+                Main.propertyStorage.getTargetGoal() - 1 == otherScore);
     }
 
     public String getWinner() {
