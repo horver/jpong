@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
+          prefWidth="640.0" styleClass="menu-container" stylesheets="@../styles/game.css"
+          xmlns:fx="http://javafx.com/fxml/1"
+          xmlns="http://javafx.com/javafx/16" fx:controller="bme.pong.controllers.ModeSelectorController">
+    <columnConstraints>
+        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="80.0" minWidth="5.0" prefWidth="1.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="40.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+        <Label text="Name"/>
+        <TextField fx:id="txtPlayerName" alignment="CENTER" onKeyReleased="#validateInput" promptText="Player1"
+                   text="Player1" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets left="50.0" right="50.0"/>
+            </GridPane.margin>
+        </TextField>
+        <RadioButton fx:id="selectJoin" mnemonicParsing="false" selected="true" text="Join" GridPane.rowIndex="1">
+            <toggleGroup>
+                <ToggleGroup fx:id="mode"/>
+            </toggleGroup>
+        </RadioButton>
+        <RadioButton fx:id="selectHost" mnemonicParsing="false" text="Host" toggleGroup="$mode" GridPane.columnIndex="1"
+                     GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="50.0"/>
+            </GridPane.margin>
+        </RadioButton>
+        <TextField fx:id="txtPort" alignment="CENTER" promptText="12345" text="12345" GridPane.columnIndex="1"
+                   GridPane.rowIndex="3">
+            <GridPane.margin>
+                <Insets left="50.0" right="50.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label fx:id="lblIp" text="IP" GridPane.rowIndex="2"/>
+        <TextField fx:id="txtAddress" alignment="CENTER" onKeyReleased="#validateInput" promptText="127.0.0.1"
+                   text="127.0.0.1" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <GridPane.margin>
+                <Insets left="50.0" right="50.0"/>
+            </GridPane.margin>
+        </TextField>
+        <Label text="Port" GridPane.rowIndex="3"/>
+        <Button fx:id="btnStartGame" mnemonicParsing="false" onAction="#StartGame" text="Start" GridPane.columnIndex="1"
+                GridPane.rowIndex="4"/>
+    </children>
+</GridPane>

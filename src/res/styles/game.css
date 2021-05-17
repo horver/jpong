@@ -1,0 +1,33 @@
+.menu-container {
+    -fx-background-color: black;
+}
+
+Label, RadioButton {
+    -fx-text-fill: white;
+}
+
+Button {
+    -fx-border-color: white;
+    -fx-border-width: 5;
+    -fx-background-color: black;
+    -fx-fill-width: true;
+    -fx-text-fill: white;
+    -fx-min-width: 200px;
+    -fx-font-family: Dialog;
+    -fx-min-height: 74px;
+    -fx-cursor: hand;
+}
+
+Button:hover {
+    -fx-font-size: 150%;
+}
+
+TextField {
+    -fx-border-color: white;
+    -fx-border-width: 5;
+    -fx-background-color: black;
+    -fx-fill-width: true;
+    -fx-text-fill: white;
+    -fx-font-family: Dialog;
+    -fx-cursor: hand;
+}

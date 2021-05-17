@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.*?>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
+      prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="bme.pong.controllers.GameController">
+   <Canvas fx:id="canvas" height="480.0" onKeyPressed="#keyEventHandler" onKeyReleased="#keyEventHandler"
+           width="640.0"/>
+   <Text fx:id="scoreField" fill="WHITE" layoutX="191.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0"
+         text="0 : 0" textAlignment="CENTER" wrappingWidth="257.13000106811523">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Text>
+   <Text fx:id="nameField" fill="WHITE" layoutX="268.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0"
+         text="Player1 - PLayer2" textAlignment="CENTER"/>
+   <VBox fx:id="menuPause" alignment="CENTER" layoutX="220.0" layoutY="120.0" prefHeight="200.0" prefWidth="100.0"
+         stylesheets="@../styles/game.css" visible="false">
+      <children>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PAUSED"/>
+         <Button mnemonicParsing="false" onAction="#actionResume" text="Resume"/>
+         <Button mnemonicParsing="false" onAction="#actionSaveState" text="Save"/>
+         <Button mnemonicParsing="false" onAction="#actionLoadState" text="Load"/>
+         <Button mnemonicParsing="false" onAction="#actionExit" text="Exit"/>
+      </children>
+   </VBox>
+   <Text fx:id="txtStatus" fill="WHITE" layoutX="284.0" layoutY="456.0" strokeType="OUTSIDE" strokeWidth="0.0"
+         text="Press space" textAlignment="CENTER"/>
+</Pane>
