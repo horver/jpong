@@ -1,7 +1,9 @@
 package bme.pong;
 
+import bme.pong.threading.AbortHandler;
+import bme.pong.networking.EventBus;
 import bme.pong.storages.PropertyStorage;
-import bme.pong.utils.IniParser;
+import bme.pong.threading.ThreadMgr;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +20,8 @@ public class Main extends Application {
     private static Stage stage;
     public static final String configPath = "game_conf.ini";
     public static final PropertyStorage propertyStorage = new PropertyStorage(Main.configPath);
+    public static final EventBus eventBus = new EventBus();
+    public static final ThreadMgr threadMgr = new ThreadMgr();
 
     @Override
     public void start(Stage primaryStage) {
@@ -25,6 +29,12 @@ public class Main extends Application {
         switchScene("mainmenu.fxml");
         primaryStage.setTitle("PONG");
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() {
+        Main.threadMgr.nukeAll();
+        System.exit(0);
     }
 
     public static File showOpenFileDialog(FileChooser fileChooser) {

@@ -1,5 +1,9 @@
 package bme.pong.entities;
 
+import bme.pong.Main;
+import bme.pong.networking.gameevents.PlayerKeyDownEvent;
+import bme.pong.networking.gameevents.PlayerKeyUpEvent;
+import javafx.event.EventType;
 import javafx.event.EventType;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
@@ -16,6 +20,15 @@ public class Player extends Pad {
 
     public Player(int x, int y) {
         super(x, y);
+    }
+
+    private void sendKeyAction(MoveAction action, EventType<KeyEvent> keyEvtType) {
+        if (keyEvtType == KeyEvent.KEY_PRESSED) {
+            Main.eventBus.pushOutgoing(new PlayerKeyDownEvent(action));
+        }
+        else if (keyEvtType == KeyEvent.KEY_RELEASED) {
+            Main.eventBus.pushOutgoing(new PlayerKeyUpEvent(action));
+        }
     }
 
     public void keyHandler(KeyEvent keyEvent) {
