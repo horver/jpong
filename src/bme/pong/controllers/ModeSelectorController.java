@@ -38,9 +38,9 @@ public class ModeSelectorController {
     @FXML
     private TextField txtGoal;
 
+
     @FXML
     void initialize() {
-
         txtPlayerName.setText(Main.propertyStorage.getPlayerName());
         txtAddress.setText(Main.propertyStorage.getHostAddress());
         txtPort.setText(String.valueOf(Main.propertyStorage.getHostPort()));
@@ -79,8 +79,10 @@ public class ModeSelectorController {
             return;
         }
         Main.propertyStorage.setPlayerName(txtPlayerName.getText());
+
         if (isJoinSelected) {
             Main.propertyStorage.setHostAddress(txtAddress.getText());
+            btnStartGame.setText("Connecting...");
         }
         Main.propertyStorage.setClient(isJoinSelected);
 
@@ -103,13 +105,23 @@ public class ModeSelectorController {
                 NetworkHandler.NetworkRole.HOST;
         networkHandler.setNetworkRole(role);
         Main.threadMgr.startThread(networkHandler, "NetworkHandler", (thread, throwable) -> {
-            Platform.runLater(() -> {
-                new Alert(Alert.AlertType.ERROR, "Connection error!").show();
-                Main.switchScene("mainmenu.fxml");
-                Main.threadMgr.nukeAll();
-            });
+            Platform.runLater(ModeSelectorController::handleNetworkError);
         });
 
+        while (!Main.isNetworkingReady.get()) {
+            if (Main.hasNetworkingFailed.get()) {
+                //handleNetworkError();
+                return;
+            }
+        }
         Main.switchScene("game.fxml");
+    }
+
+    private static void handleNetworkError() {
+        new Alert(Alert.AlertType.ERROR, "Connection error!").show();
+        Main.switchScene("mainmenu.fxml");
+        Main.threadMgr.nukeAll();
+        Main.hasNetworkingFailed.set(false);
+        Main.isNetworkingReady.set(false);
     }
 }

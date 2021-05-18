@@ -7,13 +7,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main extends Application {
 
@@ -22,6 +22,8 @@ public class Main extends Application {
     public static final PropertyStorage propertyStorage = new PropertyStorage(Main.configPath);
     public static final EventBus eventBus = new EventBus();
     public static final ThreadMgr threadMgr = new ThreadMgr();
+    public static final AtomicBoolean isNetworkingReady = new AtomicBoolean(false);
+    public static final AtomicBoolean hasNetworkingFailed = new AtomicBoolean(false);
 
     @Override
     public void start(Stage primaryStage) {
@@ -54,10 +56,6 @@ public class Main extends Application {
             return;
         }
         stage.setScene(new Scene(root, 640, 480));
-    }
-
-    public static void connectionErrorHandler() {
-        new Alert(Alert.AlertType.ERROR, "Connection error!").show();
     }
 
     public static void main(String[] args) {

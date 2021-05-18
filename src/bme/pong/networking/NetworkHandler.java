@@ -57,6 +57,7 @@ public class NetworkHandler implements Runnable {
         }
         catch (Exception ex) {
             ex.printStackTrace();
+            Main.hasNetworkingFailed.set(true);
             _threadManager.handleException("NetworkHandler", ex);
         }
     }
@@ -64,6 +65,10 @@ public class NetworkHandler implements Runnable {
     private void setHost() throws IOException {
         _logger.info("I'm a host");
         _serverSock = new ServerSocket(_port);
+        while (!_serverSock.isBound()) {
+            // Waiting
+        }
+        Main.isNetworkingReady.set(true);
         _sock = _serverSock.accept();
         _oos = new ObjectOutputStream(_sock.getOutputStream());
         initListeners();
@@ -72,6 +77,7 @@ public class NetworkHandler implements Runnable {
     private void setGuest() throws IOException, IllegalArgumentException {
         _logger.info("I'm a guest");
         _sock = new Socket(_host, _port);
+        Main.isNetworkingReady.set(true);
         _oos = new ObjectOutputStream(_sock.getOutputStream());
         ConnectionRequestEvent connReq = new ConnectionRequestEvent(_playerName);
         _logger.info("Sending connection request event");
@@ -94,7 +100,7 @@ public class NetworkHandler implements Runnable {
         while (true) {
             try {
                 IGameEvent event = _bus.popOutgoingBlocking();
-                _logger.info("Popped event from bus: " + event.getClass().getName());
+//                _logger.info("Popped event from bus: " + event.getClass().getName());
                 if (event instanceof ConnectionRequestEvent) {
                     handleConnectionRequest((ConnectionRequestEvent) event);
                 }
@@ -116,7 +122,7 @@ public class NetworkHandler implements Runnable {
     }
 
     private void sendEvent(IGameEvent event) throws IOException {
-        _logger.info("Sending class: " + event.getClass().getName());
+//        _logger.info("Sending class: " + event.getClass().getName());
         _oos.writeObject(event);
     }
 

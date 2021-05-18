@@ -34,7 +34,7 @@ public class NetworkListener implements Runnable {
         _logger.info("Starting listener thread - thread ID is: " + Thread.currentThread().getId());
         while (true) {
             try {
-                _logger.info("Waiting to read event");
+//                _logger.info("Waiting to read event");
                 enqueueEvent((IGameEvent) _ois.readObject()); // readObject() doesn't throw InterruptedException
             }
             catch (Exception ex) {
@@ -45,7 +45,7 @@ public class NetworkListener implements Runnable {
     }
 
     private void enqueueEvent(IGameEvent event) {
-        _logger.info("Received event with name: " + event.getName());
+//        _logger.info("Received event with name: " + event.getName());
         if (event instanceof ConnectionRequestEvent) {
             // Guest to host only, hence the pushing to a different queue.
             // Also, this event has to be sent to both parties

@@ -140,6 +140,7 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         if (!Main.propertyStorage.isClient()) {
             Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
         }
+        System.out.println("ConnectionEstablished");
     }
 
     private void pollEventBus() {
