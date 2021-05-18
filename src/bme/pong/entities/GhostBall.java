@@ -17,7 +17,6 @@ public class GhostBall extends GameObject {
 
     public void setDirection(Point2D vec) {
         velocity = vec;
-        System.out.println("Direction set");
     }
 
     @Override

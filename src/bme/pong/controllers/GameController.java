@@ -115,6 +115,9 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
                 resetFlags();
                 String winner = scoreManager.getWinner();
                 new Alert(Alert.AlertType.INFORMATION, "You're winner!" + winner).show();
+                Main.threadMgr.nukeAll();
+                Main.hasNetworkingFailed.set(false);
+                Main.isNetworkingReady.set(false);
                 Main.switchScene("mainmenu.fxml");
                 break;
             case OPPONENT_QUIT:
@@ -140,7 +143,6 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         if (!Main.propertyStorage.isClient()) {
             Main.eventBus.pushOutgoing(new BallDirectionChangeEvent(ball.getDirection()));
         }
-        System.out.println("ConnectionEstablished");
     }
 
     private void pollEventBus() {
@@ -171,6 +173,8 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
         } else if (event instanceof OnLoadEvent) {
             scoreManager.setPlayerScore(((OnLoadEvent) event).getPlayerScore());
             scoreManager.setOtherScore(((OnLoadEvent) event).getOtherScore());
+            scoreManager.setPlayerName(((OnLoadEvent) event).getPlayerName());
+            scoreManager.setOtherName(((OnLoadEvent) event).getOtherName());
             resetGame();
             isStarted = false;
         }
@@ -262,7 +266,10 @@ public class GameController implements OnScoreListener, OnStatisticsListener {
             if (!scoreManager.loadState(file)) {
                 new Alert(Alert.AlertType.ERROR, "Failed to load!").show();
             }
-            Main.eventBus.pushOutgoing(new OnLoadEvent(scoreManager.getPlayerScore(), scoreManager.getOtherScore()));
+            Main.eventBus.pushOutgoing(
+                    new OnLoadEvent(
+                            scoreManager.getPlayerScore(), scoreManager.getOtherScore(),
+                            scoreManager.getPlayerName(), scoreManager.getOtherName()));
             resetGame();
             isStarted = false;
         }

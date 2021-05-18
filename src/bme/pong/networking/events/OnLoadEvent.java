@@ -8,10 +8,14 @@ import java.io.Serializable;
 public class OnLoadEvent implements IGameEvent, Serializable {
     private int playerScore;
     private int otherScore;
+    private String playerName;
+    private String otherName;
 
-    public OnLoadEvent(int playerScore, int otherScore) {
+    public OnLoadEvent(int playerScore, int otherScore, String playerName, String otherName) {
         this.playerScore = playerScore;
         this.otherScore = otherScore;
+        this.playerName = playerName;
+        this.otherName = otherName;
     }
 
     @Override
@@ -33,6 +37,22 @@ public class OnLoadEvent implements IGameEvent, Serializable {
 
     public void setOtherScore(int otherScore) {
         this.otherScore = otherScore;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public String getOtherName() {
+        return otherName;
+    }
+
+    public void setOtherName(String otherName) {
+        this.otherName = otherName;
     }
 
     @Override
